@@ -1,0 +1,1654 @@
+#+title: SOUL Emacs
+#+author: 2e Asteroid
+
+* Why?
+I've always been searching for some program that would just click for me: Obsidian, Vivaldi, VS Code, Vim, etc. The program should feel intuitive to me, and easy to use. However, I haven't found that program. Therefore, I'm just going to use Emacs and make the program that I'm looking for. To do that, I'm implementing a literate configuration file.
+* Planning / Roadmap
+ - Find better fonts
+ - Customized theme
+ - Better mode line
+ - One mode line (header line) + Chimera Tabs ?
+ - Customized Dashboard
+ - Make Corfu work smoothly
+ - LSP / TS modes
+ - Smooth and easy LaTeX
+ - Custom packages for music, exercising, workflow
+ - Customized EMMS
+ - Ctags and stuff
+ - Keyboard system
+   - Multi-cursors
+   - modal?
+   - Smart
+ - Inferior modes for langs
+ - Ace stuff?
+ - Sunrise Commander
+ - tree file explorer
+ - Flycheck
+ - AI
+ - Learn magit
+ - eat / vterm
+ - notmuch
+ - emacs browser thing
+* Configuration Settings
+Here I define certain settings for this configuration. Based on those settings,
+some modules might not be loaded.
+#+begin_src emacs-lisp :tangle "init.el"
+  (defcustom use-exwm nil
+    "Whether or not you want to use EXWM. Set to t if you do."
+    :type :boolean)
+  (defcustom csl-style-directory "~/.emacs.d/data/csl-styles/"
+    "The directory where csl styles are stored (for reference management). By default they are stored in the above directory."
+   :type :directory)
+  (defcustom use-pdfview nil
+    "Whether or not you want to use PDFView. Set to t if you do."
+    :type :boolean)
+#+end_src
+* Early Initialization of Emacs (=early-init.el=)
+All of the code here will be tangled to =early-init.el=.
+** =early-init.el='s Tweaks to Startup Time
+Hacks for better startup times will be placed here, once I come up with them.
+** =early-init.el='s Basic Frame Settings
+#+begin_src emacs-lisp :tangle "early-init.el"
+  (setq frame-resize-pixelwise t                           ; Makes sure that you can resize the window by pixels (obselete since I use EXWM)
+        frame-title-format '("%b")                         ; Makes the title of the window the buffer name
+        ring-bell-function 'ignore                         ; Stops the error bell sound
+        use-short-answers t                                ; Instead of yes or no, it uses y / n
+        inhibit-splash-screen t                            ; Stops the starting screen from showing.
+        inhibit-startup-echo-area-message user-login-name) ; Stops the starting minibuffer message from showing.
+
+  (menu-bar-mode -1)                                       ; Stops the menu bar from showing (text)
+  (scroll-bar-mode -1)                                     ; Stops the scroll bar from showing (scroll)
+  (tool-bar-mode -1)                                       ; Stops the tool bar from showing (icons)
+  (tooltip-mode -1)                                        ; Instead of a help thing showing up from hovering, it displays the message in the minibuffer
+#+end_src
+** =early-init.el='s Initial Flash of Light
+I haven't /really/ noticed this problem, but I think it does happen. I'm using Protesilaos' function, but removed dependencies.
+#+begin_src emacs-lisp :tangle "early-init.el"
+  (defun prot-emacs-avoid-initial-flash-of-light ()
+    "avoid flash of light when starting emacs, if needed."
+    (setq mode-line-format nil)
+    (set-face-attribute 'default nil :background "#000000" :foreground "#000000")
+    (set-face-attribute 'mode-line nil :background "#000000" :foreground "#000000" :box 'unspecified))
+
+  (prot-emacs-avoid-initial-flash-of-light)
+#+end_src
+
+* Initialization of Emacs (=init.el=)
+** =init.el='s Package Manager (=straight.el=)
+I've never really noticed this package manager, but after switching to NixOS, I've realized that reproducibility is a must, and that's exactly what this package manager offers. This will hopefully make sure that I can use the same configuration file everywhere without question.
+
+The file directive is a list that can have the following options:
+ - =:defaults= :: Uses the default thing, which is enough for most packages
+ - Cons Cell :: Maps the CAR of the cell to the CDR of the cell, very simple but tedious
+ - List, String :: The string is basically the directory that you want the other strings to be in
+ - List, =:exclude= :: The strings in the list will be excluded
+ - String :: This will expand into a list of cons cells that also removes directories
+#+begin_src emacs-lisp :tangle "init.el"
+  ;;; Bootstrapping straight.el
+  (defvar bootstrap-version)
+  (let ((bootstrap-file
+         (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+        (bootstrap-version 5))
+    (unless (file-exists-p bootstrap-file)
+      (with-current-buffer
+          (url-retrieve-synchronously
+           "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+           'silent 'inhibit-cookies)
+        (goto-char (point-max))
+        (eval-print-last-sexp)))
+    (load bootstrap-file nil 'nomessage))
+
+  ;;; Stop Checking of Modifications
+  (setq straight-check-for-modifications nil) ; This stops the package manager from checking for modifications to package source code, and makes this a conscious process (call 'straight-rebuild-package')
+#+end_src
+** =init.el='s Declare Custom Themes Safe
+Emacs gives an annoying confirmation sequence whenever you load a theme, so this prevents that.
+#+begin_src emacs-lisp :tangle "init.el"
+  (setq custom-safe-themes t) ; Sets custom themes to be safe.
+#+end_src
+** =init.el='s Theme Initialization
+The question of the theme is not one that I have a ready answer for. I plan on using a custom theme that I'll make myself, but it takes a lot of time and effort which strays from everything else, so themes will be the last thing to add. I also plan on using autothemer.
+Because it looks unreadable without a theme, I will be using a temporary theme.
+#+begin_src emacs-lisp :tangle "init.el"
+  ;;; Theme
+  (straight-use-package
+   '(autothemer :type git
+                :host github
+                :repo "jasonm23/autothemer"
+                :files ("autothemer.el")))
+
+  (require 'autothemer)
+
+  (load-theme 'soul-theme t)
+#+end_src
+** =init.el='s all-the-icons Support
+I've read some stuff about =all-the-icons= v. =nerd-icons=, and I can say with some certainty that there's not much of a difference between them. The only differences are that =nerd-icons= is more unified, but I don't know if it supports some of what =all-the-icons= does, which is why I'm going to be using =all-the-icons=, until I find out if it /does/ support those features.
+
+https://github.com/mohkale/all-the-icons-nerd-fonts seems like an option.
+
+One thing about all-the-icons is that it's stupidly hard to build, because it needs some files which are in a subdirectory.
+#+begin_src emacs-lisp :tangle "init.el"
+  (straight-use-package
+   '(all-the-icons :type git
+                   :host github
+                   :repo "domtronn/all-the-icons.el"
+                   :files (:defaults ("data" "data/data-*.el"))))
+
+  (require 'all-the-icons)
+  (let ((default-directory "~/.emacs.d/data/all-the-icons/"))
+    (if (not (file-directory-p "~/.emacs.d/data/all-the-icons/"))
+        (progn (make-directory "~/.emacs.d/data/all-the-icons/" t)
+               (all-the-icons-install-fonts t))))
+#+end_src
+** =init.el='s Backup File Uninvolvement
+The surest way to leak data. Backing up files can be replaced by regulated git management.
+#+begin_src emacs-lisp :tangle "init.el"
+  (setq-default delete-by-moving-to-trash nil ; When you delete a file, it will not be moved to the trash instead
+                recentf-mode t              ; You can see files that you have recently been in
+                make-backup-files nil)        ; Don't create backups of the file every modification save. You can choose between renaming and copying, but there's a difference?
+#+end_src
+** =init.el='s Encoding System (UTF-8)
+Emacs keeps on bothering me with these encoding messages, so I had to define it here.
+#+begin_src emacs-lisp :tangle "init.el"
+  (set-default-coding-systems 'utf-8)
+  (set-language-environment "UTF-8")
+  (setq locale-coding-system 'utf-8)
+  (set-terminal-coding-system 'utf-8)
+  (set-keyboard-coding-system 'utf-8)
+  (set-selection-coding-system 'utf-8)
+  (prefer-coding-system 'utf-8)
+#+end_src
+** =init.el='s Module Arrangements
+Code that I write for my configuration as well as configurations of other packages (except for theme and all-the-icons) will be in the directory 'modules', and this adds it to the load path, which is a list of directories that Emacs will search through for Emacs Lisp libraries (code you wrote) to load (which you specify elsewhere with 'load').
+#+begin_src emacs-lisp :tangle "init.el"
+  (add-to-list 'load-path (locate-user-emacs-file "modules"))
+#+end_src
+** =init.el='s Add Function to Multiple Hooks
+Sometimes I want to add a function to multiple hooks. This accomplishes that.
+#+begin_src emacs-lisp :tangle "init.el"
+  (defun add-function-to-hooks (function hooks)
+    "Adds FUNCTION to every hook in the list HOOK."
+    (mapc (lambda (hook)
+            (add-hook hook function))
+          hooks))
+#+end_src
+** =init.el='s Loading of Modules
+Here I load all of my modules.
+Make sure that the modeline module comes after
+the timer module. Make sure that the EXWM module goes first. Make sure that
+dashboard is in front of essentials.
+#+begin_src emacs-lisp :tangle "init.el"
+  ;; SYSTEM
+  (if use-exwm
+      (require 'emacs-x-wm))
+  (require 'gc-magic-hack)
+  (require 'no-litter)
+  (require 'essentials)
+  (require 'fonts)
+  ;; EXTENSION
+  (require 'undoing)
+  (if use-pdfview
+      (require 'pdfs))
+  (require 'emacs-dashboard)
+  (require 'coding)
+  (require 'ogre)
+  (require 'latech)
+  (require 'zettelkasten)
+  (require 'citation)
+  (require 'completion-stack)
+  (require 'projecting)
+  (require 'infofiche)
+  (require 'chem)
+  (require 'cookie-cutter)
+  (require 'music)
+#+end_src
+
+* Emacs Configuration Modules (=modules/=)
+** The =essentials.el= Module
+This provides some basic settings on Emacs itself; no packages. Delaying this execution by 1 second will speed up the loading of Emacs.
+*** =essentials.el='s Sane Defaults
+Just a bunch of random settings.
+#+begin_src emacs-lisp :tangle "modules/essentials.el"
+  (setq-default ad-redefinition-action 'warn            ; When we redefine an active function then deactivate it, it will accept the redefinition as the new definition, but warn us. Might change to 'accept
+                confirm-kill-emacs 'y-or-n-p            ; Asks us y / n if we want to kill emacs.
+                cursor-in-non-selected-windows nil      ; Only show the cursor in the frame that we are in.
+                display-time-default-load-average nil   ; Removes the load average from the time displayed. Might be obselete since we redefine the time format.
+                display-time-format "%k:%M:%S (%Z)"     ; Format of the time displayed. It displays it as 24 hour time basically, with the time removed by timezone in parentheses
+                help-window-select t                    ; Puts the focus (cursor) on the help window we opened
+                indent-tabs-mode nil                    ; Indentation does not add tabs but just indents somehow
+                initial-scratch-message ""              ; Starting text in the scratch buffer. Replace it with libraries for coding in the future?
+                mouse-yank-at-point t                   ; Allows mouse to paste text at the cursor not at the click
+                select-enable-clipboard t               ; Copy-pasting uses system clipboard (but still have kill-ring functionality)
+                sentence-end-double-space nil           ; Makes the sentence (something for text navigation) be defined by one space, not two.
+                blink-cursor-mode nil                   ; Don't blink the cursor
+                tab-width 4                             ; Sets a tab to be four spaces
+                x-stretch-cursor nil                    ; Cursor is a constant size and doesn't change based on text under it
+                delete-old-versions t                   ; Asks for confirmation for removing excess backup versions
+                version-control t                       ; Use version control to number backup versions
+                inhibit-compacting-font-caches t        ; Stops the font cache from compacting -> higher memory footprint but increases speed for certain fonts
+                display-line-numbers-type 'relative     ; Display line numbers relatively (current line has the actual line number and the others have the distance between them and the current line)
+                use-default-font-for-symbols nil        ; Use the actual fontset for symbols and punctuation instead of defaulting to default font
+                blink-matching-paren nil                ; Don't flash matching parentheses
+                delete-pair-blink-delay 0.1             ; How long to delay the command 'delete-pair'
+                save-interprogram-paste-before-kill t   ; Saves clipboard text into kill-ring before replacing it
+                mode-require-final-newline 'visit-save  ; Adds a newline (if it doesn't already have one) to the end of files when you first open it and when you save
+                eval-expression-print-length nil        ; When returning the value of an evaluated expression, don't truncate it at all
+                scroll-conservatively 101               ; When the cursor leaves the screen, scroll up/down enough text to /just/ bring the cursor back into view
+                backup-by-copying t                     ; Instead of symlinking, make a copy for the backup. Apparently symlinks are bad ?
+                tab-always-indent 'complete             ; First trys to indent, then complete
+                kill-do-not-save-duplicates t)          ; When saving something to the kill ring, if it duplicates the last entry, don't save it.
+
+  (cd "~/")
+#+end_src
+*** =essentials.el='s Show/Remove Trailing Whitespace
+This sets up how trailing whitespace (whitespace after the last character in a
+line) is shown. When I save, the trailing whitespace is removed.
+#+begin_src emacs-lisp :tangle "modules/essentials.el"
+  (setq-default show-trailing-whitespace t) ; Show trailing whitespace after a line for cleanup
+  (add-function-to-hooks (lambda () (setq show-trailing-whitespace nil))
+                         '(calendar-mode-hook
+                           dashboard-mode-hook
+                           undo-tree-visualize-mode-hook
+                           chemtable-mode-hook
+                           chemtable-info-mode-hook))
+
+  (add-hook 'before-save-hook 'delete-trailing-whitespace) ; Delete whitespace when I save
+#+end_src
+*** =essentials.el='s Fullscreen
+Makes Emacs fullscreen, unless I'm using EXWM.
+#+begin_src emacs-lisp :tangle "modules/essentials.el"
+  (if (not use-exwm)
+      (if (string-equal window-system 'ns)
+          (toggle-frame-maximized)
+        (toggle-frame-fullscreen)))
+#+end_src
+*** =essentials.el='s Garbage Collect Buffer Upon Focusing Out
+When I focus out of a buffer, the buffer will garbage collect.
+#+begin_src emacs-lisp :tangle "modules/essentials.el"
+  (add-hook 'focus-out-hook #'garbage-collect)
+#+end_src
+*** =essentials.el='s Delete Selection Mode
+This mode essentially allows you to just delete selected text with a backspace.
+It's commonplace to see in modern applications so it's just easier overall to
+have this enabled.
+#+begin_src emacs-lisp :tangle "modules/essentials.el"
+  (delete-selection-mode 1)
+#+end_src
+*** =essentials.el='s Global Auto Revert Mode
+When a file changes in the disk, reflect that change in the buffer shown. And
+have it be this way for all files and buffers.
+#+begin_src emacs-lisp :tangle "modules/essentials.el"
+  (global-auto-revert-mode 1)
+#+end_src
+*** =essentials.el='s Electric Modes
+There's a few "electric" modes which basically just means that it does things
+automatically. The ones here are 'electric-pair-mode' which adds a closing
+parenthesis, bracket, or something, and 'electric-indent-mode', which
+automatically indents. Electric Pair Mode is simplistic, but there are a few
+things which I don't like about it, such as the behavior of deleting layered
+parentheses of:
+(...
+())
+where if you start at the end of the inner pair and delete the closing
+parenthesis, it doesn't remove the starting pair, which if you delete that, will
+delete the closing pair of the outer parentheses. In conclusion, electric pair
+mode is not the final solution, and will be replaced by something else once I
+find / make one.
+Electric Indent Mode seems fine and simplistic, but might be replaced by
+Aggressive Indent Mode once I figure out the benchmarks of that.
+#+begin_src emacs-lisp :tangle "modules/essentials.el"
+  (electric-pair-mode t)   ; Turns on Electric Pair Mode globally
+  (electric-indent-mode t) ; Turns on Electric Indent Mode globally
+#+end_src
+*** =essentials.el='s Replace Yes/No with y/n
+I don't think I'll ever need yes/no, so I'm replacing yes/no as an alias for
+y/n.
+#+begin_src emacs-lisp :tangle "modules/essentials.el"
+  (defalias 'yes-or-no-p 'y-or-n-p) ; Sets yes/no to be y/n
+#+end_src
+*** =essentials.el='s Background Transparency
+Transparency of Emacs is pretty cool and this is a custom function to do exactly that, pulled from EmacsWiki (great site). I don't know if the code works though -- it should!
+#+begin_src emacs-lisp :tangle "modules/essentials.el"
+  (set-frame-parameter nil 'alpha-background 100)
+  (add-to-list 'default-frame-alist '(alpha-background . 100))
+
+  (defun toggle-transparency ()
+    (interactive)
+    (if (>= (string-to-number emacs-version) 29.0)
+        (let ((alpha-background (frame-parameter nil 'alpha-background)))
+          (set-frame-parameter
+           nil 'alpha-background
+           (if (eql (cond ((numberp alpha-background) alpha-background)
+                          ((numberp (cdr alpha-background)) (cdr alpha-background))
+                          ;; Also handle undocumented (<active> <inactive>) form.
+                          ((numberp (cadr alpha-background)) (cadr alpha-background)))
+                    100)
+               85
+             100)))
+      (let ((alpha-background (frame-parameter nil 'alpha)))
+        (set-frame-parameter
+         nil 'alpha
+         (if (eql (cond ((numberp alpha-background) alpha-background)
+                        ((numberp (cdr alpha-background)) (cdr alpha-background))
+                        ;; Also handle undocumented (<active> <inactive>) form.
+                        ((numberp (cadr alpha-background)) (cadr alpha-background)))
+                  100)
+             '(85 . 50)
+           '(100 . 100))))))
+#+end_src
+*** =essentials.el='s Global Subword Mode
+Global Subword Mode enables subword-mode globally, which makes a word to be
+split by capital letters too (helps with Pascal Case and camelCase).
+#+begin_src emacs-lisp :tangle "modules/essentials.el"
+  (global-subword-mode)  ; Enables global subword mode
+#+end_src
+*** =essentials.el='s Show Parentheses
+This marks pairing parentheses with a special color, and improves visibility
+overall.
+#+begin_src emacs-lisp :tangle "modules/essentials.el"
+  (setq show-paren-delay 0)  ; Don't delay the parentheses showing
+  (show-paren-mode 1)
+#+end_src
+*** =essentials.el='s Mouse Config
+Makes the mouse more usable. TODO Document the code more.
+#+begin_src emacs-lisp :tangle "modules/essentials.el"
+  (setq mouse-wheel-scroll-amount
+        '(1
+          ((shift) . 5)
+          ((meta) . 0.5)
+          ((control) . text-scale))
+        mouse-drag-copy-region nil
+        make-pointer-invisible t
+        mouse-wheel-progressive-speed t
+        mouse-wheel-follow-mouse t)
+
+  (setq-default scroll-preserve-screen-position t
+                scroll-conservatively 1
+                scroll-margin 0
+                next-screen-context-lines 0)
+
+  (mouse-wheel-mode 1)
+  (define-key global-map (kbd "C-M-<mouse-3>") #'tear-off-window)
+#+end_src
+*** =essentials.el='s Sudo Find File
+#+begin_src emacs-lisp :tangle "modules/essentials.el"
+  (defun sudo-find-file (file-name)
+  "Like find file, but opens the file as root."
+  (interactive "FSudo Find File: ")
+  (let ((tramp-file-name (concat "/sudo::" (expand-file-name file-name))))
+    (find-file tramp-file-name)))
+#+end_src
+*** =essentials.el='s Provide
+#+begin_src emacs-lisp :tangle "modules/essentials.el"
+  (provide 'essentials)
+#+end_src
+** The =fonts.el= Module
+This file manages fonts, ligatures, and generally how text looks. I use Fantasque Sans Mono as my default
+font, with different backups depending on whether I'm using Windows or Linux.
+For Linux, the fonts should be covered by NixOS.
+Fonts that you have to download:
+ - Windows
+   - Unifont
+     [[https://unifoundry.com/pub/unifont/unifont-15.1.04/font-builds/unifont-15.1.04.otf][Standard Unifont]]
+     [[https://unifoundry.com/pub/unifont/unifont-15.1.04/font-builds/unifont_upper-15.1.04.otf][Unifont Upper]]
+ - Linux
+   - Noto Color Emoji
+     [[https://github.com/googlefonts/noto-emoji/raw/main/fonts/NotoColorEmoji.ttf][Noto Color Emoji]]
+   - Unifont
+     [[https://unifoundry.com/pub/unifont/unifont-15.1.04/font-builds/unifont-15.1.04.otf][Standard Unifont]]
+     [[https://unifoundry.com/pub/unifont/unifont-15.1.04/font-builds/unifont_upper-15.1.04.otf][Unifont Upper]]
+*** =fonts.el='s Fontsetting
+This determines the fonts available.
+#+begin_src emacs-lisp :tangle "modules/fonts.el"
+  (cond ((string-equal window-system 'w32) (progn
+                                             (when (member "Segoe UI Emoji" (font-family-list))
+                                               (set-fontset-font t 'symbol (font-spec :family "Segoe UI Emoji") nil 'prepend)
+                                               (set-fontset-font "fontset-default" '(#xFE00 . #xFE0F) "Segoe UI Emoji"))
+
+                                             (when (member "Times New Roman" (font-family-list))
+                                               (set-fontset-font "fontset-default" 'unicode "Times New Roman"))
+
+                                             (when (member "Unifont" (font-family-list))
+                                               (set-fontset-font t nil "Unifont" nil 'append)
+                                               (set-fontset-font t nil "Unifont Upper" nil 'append)))
+         (string-equal window-system 'x) (progn
+                                           (when (member "Noto Color Emoji" (font-family-list))
+                                             (set-fontset-font t 'symbol (font-spec :family "Noto Color Emoji") nil 'prepend)
+                                             (set-fontset-font "fontset-default" '(#xFE00 . #xFE0F) "Noto Color Emoji"))
+
+                                           (when (member "Unifont" (font-family-list))
+                                             (set-fontset-font t nil "Unifont" nil 'append)
+                                             (set-fontset-font t nil "Unifont Upper" nil 'append)))))
+
+#+end_src
+*** =fonts.el='s Rainbow Mode
+This mode highlights color codes with the color they are. I think it's useful so
+I keep it around
+#+begin_src emacs-lisp :tangle "modules/fonts.el"
+  ;;; Rainbow Mode
+  (straight-use-package
+   '(rainbow-mode :type git
+                  :host github
+                  :repo "emacsmirror/rainbow-mode"
+                  :files (:defaults)))
+  (require 'rainbow-mode)
+
+  (add-hook 'prog-mode-hook 'rainbow-mode) ; Adds rainbow-mode to all programming modes.
+  (setq rainbow-x-colors nil)              ; Prevents words like 'gold' from being highlighted
+#+end_src
+*** =fonts.el='s Ligatures
+I am currently using fira code mode, but the preferred solution is
+`ligature.el`, which I will switch to in the future.
+#+begin_src emacs-lisp :tangle "modules/fonts.el"
+    ;;; Fira Code Mode
+  (straight-use-package
+   '(fira-code-mode :type git
+                    :host github
+                    :repo "jming422/fira-code-mode"
+                    :files (:defaults)))
+
+  (require 'fira-code-mode)
+
+  (unless (member "Fira Code Symbol" (font-family-list))
+    (fira-code-mode-install-fonts))
+
+  (fira-code-mode-set-font)
+  (setq fira-code-mode-disabled-ligatures '("*" "?=" "[]" "x"))
+  (add-hook 'prog-mode-hook 'fira-code-mode)
+#+end_src
+*** =fonts.el='s Provide
+#+begin_src emacs-lisp :tangle "modules/fonts.el"
+  (provide 'fonts)
+#+end_src
+** The =no-litter.el= Module
+Many packages / features in Emacs have data they want to keep in a file. The
+question is, where? This results in many scattered data / config files around
+your system. No Littering.el is meant to combat this dilemma.
+#+begin_src emacs-lisp :tangle "modules/no-litter.el"
+  ;;; No Littering
+  (straight-use-package
+   '(no-littering :type git
+                  :host github
+                  :repo "emacscollective/no-littering"
+                  :files (:defaults)))
+
+  (defvar no-littering-etc-directory
+        (expand-file-name "config/" user-emacs-directory))
+  (defvar no-littering-var-directory
+        (expand-file-name "data/" user-emacs-directory))
+
+  (require 'no-littering)
+  #+end_src
+*** =no-litter.el=: Disable no-littering files from appearing in recentf
+I think this is intuitive to understand and shouldn't warrant any more explanations.
+#+begin_src emacs-lisp :tangle "modules/no-litter.el"
+  (require 'recentf)
+  (add-to-list 'recentf-exclude                                          ; Excludes all no-littering files from recentf
+               (recentf-expand-file-name no-littering-var-directory))
+  (add-to-list 'recentf-exclude                                          ; ^
+               (recentf-expand-file-name no-littering-etc-directory))
+#+end_src
+*** =no-litter.el='s Storing Interactive Configurations in a Custom File (=custom.el=)
+Interactive configurations will appear in your =init.el= if you don't do this,
+which is quite annoying.
+#+begin_src emacs-lisp :tangle "modules/no-litter.el"
+  (setq custom-file (no-littering-expand-etc-file-name "custom.el"))     ; Stores Emacs' configuration interface in the config folder, called custom.el
+#+end_src
+*** =no-litter.el='s Provide
+#+begin_src emacs-lisp :tangle "modules/no-litter.el"
+  (provide 'no-litter)
+#+end_src
+** The =gc-magic-hack.el= Module
+The Garbage Collector Magic Hack is a package that changes the garbage
+collection threshold (how much data used before removing data we don't need)
+whenever we go idle and back. When we are actively using our Emacs, you should
+ideally not garbage collect at all. Only when we aren't doing anything should we
+garbage collect.
+#+begin_src emacs-lisp :tangle "modules/gc-magic-hack.el"
+    (straight-use-package
+     '(gcmh :type git
+            :host github
+            :repo "emacsmirror/gcmh"
+            :files (:defaults)))
+    (require 'gcmh)
+#+end_src
+*** =gc-magic-hack.el='s Configuration
+#+begin_src emacs-lisp :tangle "modules/gc-magic-hack.el"
+  (setq gcmh-low-cons-threshold 800000   ; 800 kB
+        gcmh-high-cons-threshold 3200000 ; 1.6 mB
+        gcmh-idle-delay 20               ; 15 sec.
+        gcmh-verbose t)                  ; Tells us when it garbage collects.
+  (gcmh-mode)
+#+end_src
+*** =gc-magic-hack.el='s Provide
+#+begin_src emacs-lisp :tangle "modules/gc-magic-hack.el"
+  (provide 'gc-magic-hack)
+#+end_src
+** The =emacs-dashboard.el= Module
+This configures the startup dashboard, a buffer that appears at the start of
+Emacs and stays in Emacs. It contains some quick information and looks cool
+generally.
+#+begin_src emacs-lisp :tangle "modules/emacs-dashboard.el"
+  (straight-use-package
+   '(dashboard :type git
+               :host github
+               :repo "emacs-dashboard/emacs-dashboard"
+               :files (:defaults "banners/*.txt")))
+#+end_src
+*** =emacs-dashboard.el='s Configuration
+This has the actual configuration code.
+#+begin_src emacs-lisp :tangle "modules/emacs-dashboard.el"
+  (dashboard-setup-startup-hook)  ; Sets up dashboard to show at startup
+  (setq dashboard-banner-logo-title "Chimera Systems™") ; You can also propertize the title and have it be (propertize "TITLE" 'face FACE)
+  (setq dashboard-startup-banner 1)  ; Change this to my own banner in the future
+  (setq dashboard-center-content t
+        dashboard-set-heading-icons t)
+#+end_src
+*** =emacs-dashboard.el='s Provide
+#+begin_src emacs-lisp :tangle "modules/emacs-dashboard.el"
+  (provide 'emacs-dashboard)
+#+end_src
+** The =pdfs.el= Module
+This is almost leaving Emacs' capabilities, because of its transition from text
+to graphics.
+*** =pdfs.el='s DocView Configuration
+DocView is the default pdf reader for Emacs. It turns pages of the pdf into
+images then loads those images. In effect, it is slow and cumbersome. However,
+if we cannot get our hands on PDF-tools, DocView will have to do.
+
+TODO Document what it actually does.
+#+begin_src emacs-lisp :tangle "modules/pdfs.el"
+  (setq doc-view-scale-internally t
+        doc-view-resolution 600)
+#+end_src
+*** =pdfs.el='s PDF-tools Configuration
+This is the good stuff. It stores the PDF data in memory instead of as images
+and is consequently faster.
+#+begin_src emacs-lisp :tangle "modules/pdfs.el"
+  (straight-use-package
+   '(pdf-tools :type git
+               :host github
+               :repo "vedang/pdf-tools"
+               :files (:defaults)))
+
+  (require 'pdf-tools)
+  (pdf-tools-install)
+#+end_src
+*** =pdfs.el='s Provide
+#+begin_src emacs-lisp :tangle "modules/pdfs.el"
+  (provide 'pdfs)
+#+end_src
+** The =undoing.el= Module
+Emacs has a rich undo system, with things like a tree instead of a single line of undo points.
+#+begin_src emacs-lisp :tangle "modules/undoing.el"
+  (setq undo-limit 1000000)   ; The undo limit is the max amount of bytes of undo data to store. I think 1 mB is enough for now (I can change it later).
+#+end_src
+*** =undoing.el='s Undo Fu
+I used to use Undo-Tree, but after comparing the security issues with the backups it creates and the potential for data corruption, I've decided to move to Undo Fu for a more safe experience.
+#+begin_src emacs-lisp :tangle "modules/undoing.el"
+  (straight-use-package
+   '(undo-fu :type git
+             :host github
+             :repo "emacsmirror/undo-fu"
+             :files (:defaults)))
+
+  (require 'undo-fu)
+
+  ;; Switch these later
+  (global-set-key (kbd "C-/")   'undo-fu-only-undo)
+  (global-set-key (kbd "C-S-/") 'undo-fu-only-redo)
+#+end_src
+*** =undoing.el='s Provide
+#+begin_src emacs-lisp :tangle "modules/undoing.el"
+  (provide 'undoing)
+#+end_src
+** The =citation.el= Module
+Citations are actually kind of hard to set up, at least in my current experience. This whole module is dedicated to making citations work.
+*** =citation.el='s Zotra
+Zotra performs essentially the same task as Zotero, except you don't need the client open and you can run this in Emacs.
+#+begin_src emacs-lisp :tangle "modules/citation.el"
+  (straight-use-package
+   '(zotra :type git
+           :host github
+           :repo "mpedramfar/zotra"
+           :files (:defaults)))
+
+  (require 'zotra)
+
+  (setq zotra-default-bibliography (expand-file-name "biblio.bib" org-roam-directory))
+#+end_src
+*** =citation.el='s Org-Cite
+Org-cite is a built-in org-mode system for reference handling.
+#+begin_src emacs-lisp :tangle "modules/citation.el"
+  (straight-use-package
+   '(oc :type built-in))
+
+  (require 'oc)
+
+  (setq org-cite-global-bibliography
+        '("~/.emacs.d/zettels/biblio.bib"))
+
+  (setq org-cite-export-processors
+        `((md . (csl ,(expand-file-name "chicago-fullnote-bibliography.csl" csl-style-directory)))
+          (latex biblatex)
+          (odt . (csl ,(expand-file-name "chicago-fullnote-bibliography.csl" csl-style-directory)))
+          (t . (csl ,(expand-file-name "chicago-fullnote-bibliography.csl" csl-style-directory)))))
+#+end_src
+*** =citation.el='s Citeproc
+Citeproc is a CSL processor for Emacs that works with Org-Cite to allow for CSL-based citing.
+#+begin_src emacs-lisp :tangle "modules/citation.el"
+  (straight-use-package
+   '(citeproc :type git
+              :host github
+              :repo "andras-simonyi/citeproc-el"
+              :files (:defaults)))
+
+  (require 'citeproc)
+#+end_src
+*** =citation.el='s Citar
+Citar is a citation displayer that looks better than the default. Citar-Org-Roam also allows me to create notes on references in my bibliography through =citar-open-notes= (to create notes the first time) and =citar-open-note= (to open already existing notes).
+#+begin_src emacs-lisp :tangle "modules/citation.el"
+  (straight-use-package
+   '(citar :type git
+           :host github
+           :repo "emacs-citar/citar"
+           :files (:defaults)))
+
+  (require 'citar)
+
+  (setq org-cite-insert-processor 'citar
+        org-cite-follow-processor 'citar
+        org-cite-activate-processor 'citar
+        citar-bibliography org-cite-global-bibliography)
+
+  (straight-use-package
+   '(citar-org-roam :type git
+                    :host github
+                    :repo "emacs-citar/citar-org-roam"
+                    :files (:defaults)))
+
+  (require 'citar-org-roam)
+
+  (citar-register-notes-source
+   'orb-citar-source (list :name "Zettels"
+                           :category 'org-roam-node
+                           :items #'citar-org-roam--get-candidates
+                           :hasitems #'citar-org-roam-has-notes
+                           :open #'citar-org-roam-open-note
+                           :create #'orb-citar-edit-note
+                           :annotate #'citar-org-roam--annotate))
+
+  (setq citar-org-roam-note-title-template "${author editor} :: ${title}"
+        citar-org-roam-capture-template-key "r"
+        citar-notes-source 'orb-citar-source)
+
+  (citar-org-roam-mode) ; Has to be after everything above
+#+end_src
+*** =citation.el='s Provide
+#+begin_src emacs-lisp :tangle "modules/citation.el"
+  (provide 'citation)
+#+end_src
+** The =ogre.el= Module
+This is the whole of all Org Mode configurations that I made. Org Mode is one of
+the flagship features of Emacs in my opinion, a fully featured customizable
+markup language (and general productivity / writing messiah) which can replace
+most if not all tools in your toolkit, like notebooks, ... more examples, etc.
+#+begin_src emacs-lisp :tangle "modules/ogre.el"
+  (straight-use-package
+   '(org :type built-in))  ; Uses the built-in version of org.
+
+  (require 'org)
+#+end_src
+*** =ogre.el='s Core Customization
+These are all of the main customizations of the central module 'org'.
+#+begin_src emacs-lisp :tangle "modules/ogre.el"
+  (setq org-ellipsis nil                               ; Uses ... for hidden org headlines, which might change in the future.
+        org-startup-folded t                           ; Folds and hides org headlines at startup
+        org-pretty-entities t                          ; Makes certain characters display as UTF-8 unicode symbols.
+        org-auto-align-tags t                          ; Keeps org tags aligned always
+        org-fold-catch-invisible-edits 'show-and-error ; When editing text inside a hidden area, open the headline and abort edit
+        org-special-ctrl-a/e t                         ; Makes C-a and C-e be special in a headline
+        org-image-actual-width 1000                    ; Messes things up
+        org-insert-heading-respect-content t           ; When adding a new headline, have it respect the current tree you're in
+        org-hide-emphasis-markers t                    ; Hides markup characters
+        org-startup-indented t)                        ; Start org modes with text under a headline indented to the depth of the headline.
+
+  (add-hook 'org-mode-hook 'visual-line-mode) ; Makes Org Mode display with visual lines (smart wrapping)
+
+  ;; I also have to add org modules once I know what I want to add
+  (setq org-modules '(ol-doi
+                      ol-w3m
+                      ol-bbdb
+                      ol-bibtex
+                      ol-docview
+                      ol-gnus
+                      ol-info
+                      ol-irc
+                      ol-mhe
+                      ol-rmail
+                      ol-eww
+                      org-habit))
+#+end_src
+*** =ogre.el='s Org Agenda Stuff
+Org Agenda is an aggregation of all your tasks, creating this master view of everything you need to do. Pretty cool.
+#+begin_src  emacs-lisp :tangle "modules/ogre.el"
+  (require 'org-agenda)
+
+  (setq org-todo-keywords '((sequence "TODO(t)" "NEXT(n!)" "WAITING(w@/!)" "|" "DONE(d!)" "CANCELED(c@/!)")) ; Setq todo keywords to that sequence
+        org-agenda-block-separator ?-       ; Sets the block separator to ?-
+        org-agenda-time-grid '((daily today require-timed)              ; Explain Later
+                               (800 1000 1200 1400 1600 1800 2000)
+                               " ┄┄┄┄┄ " "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
+        org-agenda-current-time-string "◀-- now -------------------------------------------------"
+        org-agenda-files '("~/.emacs.d/work/tasks.org")
+        org-agenda-tags-column org-tags-column
+        org-agenda-sticky t
+        org-agenda-inhibit-startup nil
+        org-agenda-dim-blocked-tasks nil
+        org-agenda-compact-blocks nil
+        org-deadline-warning-days 7)
+#+end_src
+*** =ogre.el='s Edit Org LaTeX in Separate Buffer
+The customization for this breaches the LaTeX configuration, so this only loads
+the package and leave the customization for LaTeX.
+#+begin_src emacs-lisp :tangle "modules/ogre.el"
+  (straight-use-package
+   '(org-edit-latex :type git
+                    :host github
+                    :repo "et2010/org-edit-latex"
+                    :files (:defaults)))
+
+  (require 'org-edit-latex)
+#+end_src
+*** =ogre.el='s Org Bullets
+This package replaces the asterisk in the headlines to other symbols instead. We of course have to first hide leading stars for the headlines so it shows only one. Add back the tangle later.
+#+begin_src emacs-lisp :tangle "modules/ogre.el"
+  (setq org-hide-leading-stars t)
+
+  (straight-use-package
+   '(org-bullets :type git
+                 :host github
+                 :repo "sabof/org-bullets"
+                 :files (:defaults)))
+
+  (require 'org-bullets)
+  (add-hook 'org-mode-hook (lambda ()
+                             (org-bullets-mode 1)))
+
+  (setq org-bullets-bullet-list '("⦿" "○" "◎"))
+#+end_src
+*** =ogre.el='s Org Modern
+Org Modern is a package that adds a modern text processing feel to org mode, adding basically syntax sugar to everything. This is currently not in use (add the tangle back when needed).
+#+begin_src emacs-lisp
+  (straight-use-package
+   '(org-modern :type git
+                :host github
+                :repo "minad/org-modern"
+                :files (:defaults)))
+
+  (require 'org-modern)
+  (with-eval-after-load 'org (global-org-modern-mode))  ; Runs #'global-org-modern-mode which enables org-modern globally, after org
+#+end_src
+*** =ogre.el='s Org Capture Templates
+Org capture is a special system within Emacs / Org Mode where you can pull up a temporary buffer anywhere (in Emacs) and write things in there. The text written will be transferred to a file. This is especially useful for Org-Roam, where you can collect your fleeting thoughts.
+#+begin_src emacs-lisp :tangle "modules/ogre.el"
+  (eval-after-load "zettelkasten"
+    '(setq org-capture-templates
+           `(("t" "Task" entry (file "~/.emacs.d/work/tasks.org")
+              "* TODO %^{Task}\nADDED: %T\nDEADLINE: %^{DEADLINE}t\n\n%?\n")
+             ("p" "Project" entry (file "~/.emacs.d/work/tasks.org")
+              "* %? :PROJECT:\n")
+             ("s" "Slipbox" entry (file ,(expand-file-name "inbox.org" org-roam-directory))
+              "* %T\n%?\n"))))
+
+  ;; These are the refiling targets for org-capture
+  (setq org-refile-targets '((org-agenda-files . (:tag . "PROJECT"))))
+#+end_src
+*** =ogre.el='s Special Fonts
+I like to use proportional serif fonts for Org-Mode, like ETBembo. Currently, this is not in use, with it not being tangled to the file. When I want to use it in the future, I'll re-add the tangle.
+#+begin_src emacs-lisp
+  (let* ((variable-tuple
+          ;; Sets 'variable-tuple to '(:font "ETBembo") if it can find it
+          (cond ((x-list-fonts "ETBembo")         '(:font "ETBembo"))
+                ;; Sets 'variable-tuple to '(:fonts "Times New Roman") is it can find it
+                ((x-list-fonts "Times New Roman") '(:font "Times New Roman"))
+                ;; Sets 'variable-tuple to '(:fonts "Sans Serif") if it can find one
+                ((x-family-fonts "Sans Serif")    '(:family "Sans Serif"))
+                (nil (warn "Cannot find a Sans Serif Font.  Install a Sans Serif font."))))
+         ;; Sets 'base-font-color to the default face's text color
+         (base-font-color     (face-foreground 'default nil 'default))
+         ;; Sets 'headline to this p-list?
+         (headline           `(:inherit default :weight ultra-bold :foreground ,base-font-color)))
+
+    ;; Sets the org level faces with the special font and color
+    (custom-theme-set-faces
+     'user
+     `(org-level-8 ((t (,@headline ,@variable-tuple))))
+     `(org-level-7 ((t (,@headline ,@variable-tuple))))
+     `(org-level-6 ((t (,@headline ,@variable-tuple))))
+     `(org-level-5 ((t (,@headline ,@variable-tuple))))
+     `(org-level-4 ((t (,@headline ,@variable-tuple :height 1.1))))
+     `(org-level-3 ((t (,@headline ,@variable-tuple :height 1.2))))
+     `(org-level-2 ((t (,@headline ,@variable-tuple :height 1.4))))
+     `(org-level-1 ((t (,@headline ,@variable-tuple :height 1.5))))
+     `(org-document-title ((t (,@headline ,@variable-tuple :height 1.5 :underline nil))))))
+
+  ;; Sets the variable pitch face and the fixed pitch face, and makes org mode be variable-pitch
+  (custom-theme-set-faces
+   'user
+   '(variable-pitch ((t (:family "ETBembo" :height 185 :weight thin))))
+   '(fixed-pitch ((t ( :family "Fantasque Sans Mono" :height 185)))))
+  (add-hook 'org-mode-hook 'variable-pitch-mode)
+
+  (custom-theme-set-faces
+   'user
+   ;; Sets text in org blocks to be fixed-pitch and delimiters as well
+   '(org-block ((t (:inherit fixed-pitch))))
+   '(org-block-begin-line ((t (:inherit shadow fixed-pitch))))
+   '(org-block-end-line ((t (:inherit shadow fixed-pitch))))
+   ;; Sets code snippets to be shadowed and fixed-pitch
+   '(org-code ((t (:inherit (shadow fixed-pitch)))))
+   ;; Sets the org document information to be orange
+   '(org-document-info ((t (:foreground "dark orange"))))
+   ;; Sets the keywords (#+TITLE:, etc) to be shadowed and fixed-pitch
+   '(org-document-info-keyword ((t (:inherit (shadow fixed-pitch)))))
+   ;; Sets the org-indent face (to hide extra asterisks) to be invisible and fixed-pitch
+   '(org-indent ((t (:inherit (org-hide fixed-pitch)))))
+   ;; Sets links to be blue and underlined
+   '(org-link ((t (:foreground "royal blue" :underline t))))
+   ;; Sets the text for meta lines (#+begin_src, etc) to be the font and colors of comments and also fixed-pitch
+   '(org-meta-line ((t (:inherit (font-lock-comment-face fixed-pitch)))))
+   ;; Sets org property value text to be fixed pitch as well
+   '(org-property-value ((t (:inherit fixed-pitch))) t)
+   ;; Sets org special keywords to be commented and fixed pitch
+   '(org-special-keyword ((t (:inherit (font-lock-comment-face fixed-pitch)))))
+   ;; Sets org tables to be also fixed-pitch and with a special font color
+   '(org-table ((t (:inherit fixed-pitch :foreground "#83a598"))))
+   ;; Sets the org tags to be bold, smaller, with shadowed fixed pitch text
+   '(org-tag ((t (:inherit (shadow fixed-pitch) :weight bold :height 0.8))))
+   ;; Sets the verbatim text (==) to be shadowed and fixed pitch
+   '(org-verbatim ((t (:inherit (shadow fixed-pitch))))))
+
+  ;; Sets the line spacing in org files to be a bit bigger
+  (add-hook 'org-mode-hook (lambda () (setq line-spacing 0.4)))
+#+end_src
+*** =ogre.el='s Provide
+#+begin_src emacs-lisp :tangle "modules/ogre.el"
+  (provide 'ogre)
+#+end_src
+** The =latech.el= Module
+LaTeX is a typesetting (display stuff in a special way) system for mathematics and science in general. It's useful and Emacs is a great editor for it.
+#+begin_src emacs-lisp :tangle "modules/latech.el"
+  (straight-use-package
+   '(auctex :type git
+            :host github
+            :repo "emacs-straight/auctex"
+            :files ("*" (:exclude ".git"))))
+
+  (require 'auctex)
+#+end_src
+*** =latech.el='s Core Customization
+These are all basic tex settings with no additional dependencies. Probably.
+#+begin_src emacs-lisp :tangle "modules/latech.el"
+
+  (setq TeX-command-default (if (executable-find "latexmk") "LatexMk" "LaTeX")  ; the default command for running tex files
+        TeX-engine (if (executable-find "xetex") 'xetex 'default)  ; The engine for tex
+        TeX-auto-save t  ; Whether to save style info when you save the file
+        TeX-parse-self t  ; Parse the file if there's no style hook
+        TeX-syntactic-comment t  ; Non-nil comments parsed to specification
+        TeX-auto-local ".auctex-auto"  ; Where to put auto-gen tex info
+        TeX-style-local ".auctex-style"  ; Where to put hand-made tex info
+        TeX-source-correlate-mode t  ; A connection from the output and the source can be made
+        TeX-source-correlate-method 'synctex  ; Other package for syncing between output and source
+        TeX-source-correlate-start-server nil  ; Don't auto-start the correlation server
+        TeX-electric-sub-and-superscript t  ; Add braces when you use sub/super script in tex
+        TeX-fill-break-at-separators nil  ; Don't auto hard-wrap stuff
+        TeX-electric-math '("\\( " . " \\)")  ; Allows for auto completion of a starting inline equation.
+        TeX-master t ; All files are probably master files
+        TeX-save-query t)  ; Ask to save before starting tex
+
+  (add-hook 'TeX-mode-hook #'visual-line-mode)
+#+end_src
+*** =latech.el='s Default TeX-mode Configuration
+The default major mode for displaying TeX files is tex-mode.
+#+begin_src emacs-lisp :tangle "modules/latech.el"
+  (straight-use-package
+   '(tex-mode :type built-in))
+
+  (require 'tex-mode)
+
+  (setq LaTeX-section-hook '(LaTeX-section-heading
+                             LaTeX-section-title
+                             LaTeX-section-toc
+                             LaTeX-section-section
+                             LaTeX-section-label)
+        LaTeX-fill-break-at-separators nil
+        LaTeX-item-indent 0)
+#+end_src
+*** =latech.el='s Provide
+#+begin_src emacs-lisp :tangle "modules/latech.el"
+  (provide 'latech)
+#+end_src
+** The =completion-stack.el= Module
+There are many different ways to do things in Emacs. There are defaults like ido, or huge systems like helm and ivy, or not using any of those at all. The searching stack of packages I use is the *V* ertico - *O* rderless - *M* arginalia - *C* onsult - *E* mbark - *C* orfu - *C* ape - *T* empel Stack.
+*** =completion-stack.el='s Vertico Configuration
+Vertico is a completion user interface that displays completion options vertically. Some of the benefits it offers are:
+ - Uses native API for completion
+ - Highly extensible
+#+begin_src emacs-lisp :tangle "modules/completion-stack.el"
+  (straight-use-package
+   '(vertico :type git
+             :host github
+             :repo "minad/vertico"
+             :files (:defaults "extensions/*")))
+
+  (require 'vertico)
+  (require 'vertico-indexed)
+  (require 'vertico-mouse)
+  (require 'vertico-multiform)
+  (require 'vertico-reverse)
+  (require 'vertico-quick)
+  (require 'vertico-buffer)
+
+
+  (vertico-mode) ; Starts Vertico
+  (setq vertico-cycle t) ; When you reach the end or top, it cycles to the top / end
+
+  (setq read-extended-command-predicate #'command-completion-default-include-p) ; Stops commands from showing in M-x if it doesn't apply to the current mode
+#+end_src
+*** =completion-stack.el='s Marginalia Configuration
+Marginalia is a small package that displays metadata along with the entry in the completion UI for Vertico. I find it useful most of the time, and it's generally good to have.
+#+begin_src emacs-lisp :tangle "modules/completion-stack.el"
+  (straight-use-package
+     '(marginalia :type git
+                  :host github
+                  :repo "minad/marginalia"
+                  :files (:defaults)))
+
+    (require 'marginalia)
+
+    (marginalia-mode)
+
+    (setq marginalia-max-relative-age 2592000 ; For time-based metadata (like time created) how far do we want to go (30 days) before switching from a relative (5 days ago) date to a fixed date (December 31st, 2020)
+          marginalia-align 'right) ; How we align the annotations: to the right
+#+end_src
+*** =completion-stack.el='s Icons for Completion
+There are two different methods for showing icons in Emacs: all-the-icons and nerd-icons. I'm using all-the-icons right now, but nerd-icons seems better in the long run. I'm using the all-the-icons-completion package to show icons.
+#+begin_src emacs-lisp :tangle "modules/completion-stack.el"
+  (straight-use-package
+   '(all-the-icons-completion :type git
+                              :host github
+                              :repo "iyefrat/all-the-icons-completion"
+                              :files (:defaults)))
+
+   (require 'all-the-icons-completion)
+
+   (all-the-icons-completion-mode) ; Turns on icons
+   (add-hook 'marginalia-mode-hook #'all-the-icons-completion-marginalia-setup) ; Sets up the icons when annotations are set up.
+#+end_src
+*** =completion-stack.el='s Orderless Configuration
+Orderless is a completion style where the pattern is divided into different components and it uses these components to match in any order of the components.
+#+begin_src emacs-lisp :tangle "modules/completion-stack.el"
+  (straight-use-package
+   '(orderless :type git
+               :host github
+               :repo "oantolin/orderless"
+               :files (:defaults)))
+
+  (require 'orderless)
+
+  (setq completion-styles '(orderless basic) ; Sets the default style to be orderless with basic as a backup
+        completion-category-defaults nil     ; Don't have defaults for most categories (override if necessary)
+        completion-category-overrides '((file (styles basic partial-completion)))) ; For files, we want to not use orderless, and instead stick with basic and partial completion (e.x. /e/n/c -> /etc/nixos/configuration.nix)
+
+
+#+end_src
+*** =completion-stack.el='s Corfu x Cape Configuration
+Corfu is an in-buffer completion framework designed to work for Vertico. It will provide the function completions for our code and such.
+#+begin_src emacs-lisp :tangle "modules/completion-stack.el"
+  (straight-use-package
+   '(corfu :type git
+           :host github
+           :repo "minad/corfu"
+           :files (:defaults "extensions/*")))
+
+  (straight-use-package
+   '(cape :type git
+          :host github
+          :repo "minad/cape"
+          :files (:defaults)))
+
+  (require 'corfu)
+  (require 'cape)
+
+  (setq corfu-cycle t            ; Cycle through the options
+        corfu-auto t             ; Auto completion (opens menu automatically)
+        corfu-auto-prefix 2      ; How many characters you type before it pops up; I think 2 is pretty great because for smaller symbols it won't pop up.
+        corfu-auto-delay 1       ; How long to wait; I've found that it becomes annoying when it constantly pops up when I don't want it to.
+        corfu-preview-current t) ; Preview the current option
+
+  (global-corfu-mode)   ; Sets up Corfu globally
+
+  (add-to-list 'completion-at-point-functions #'cape-file)      ; Allows Corfu to complete file paths
+  (add-to-list 'completion-at-point-functions #'cape-elisp-block)   ; Allows Corfu to complete in source code blocks (Org)
+
+  (defun corfu-enable-in-minibuffer ()
+    "Enable Corfu in the minibuffer."
+    (when (local-variable-p 'completion-at-point-functions)
+      (setq-local corfu-auto t) ;; Enable/disable auto completion
+      (setq-local corfu-echo-delay 3 ;; Disable automatic echo and popup
+                  corfu-popupinfo-delay 3)
+      (corfu-mode 1)))
+
+  (add-hook 'minibuffer-setup-hook #'corfu-enable-in-minibuffer)
+
+  (defun corfu-move-to-minibuffer ()
+    (interactive)
+    (pcase completion-in-region--data
+      (`(,beg ,end ,table ,pred ,extras)
+       (let ((completion-extra-properties extras)
+             completion-cycle-threshold completion-cycling)
+         (consult-completion-in-region beg end table pred)))))
+
+  (keymap-set corfu-map "M-m" #'corfu-move-to-minibuffer)
+
+  (add-to-list 'corfu-continue-commands #'corfu-move-to-minibuffer)
+#+end_src
+*** =completion-stack.el='s Consult Configuration
+Consult provides back-end functions for completion that are essentially nicer functions for finding things, etc.
+#+begin_src emacs-lisp :tangle "modules/completion-stack.el"
+  (straight-use-package
+   '(consult :type git
+             :host github
+             :repo "minad/consult"
+             :files (:defaults)))
+
+  (require 'consult)
+#+end_src
+*** =completion-stack.el='s Provide
+#+begin_src emacs-lisp :tangle "modules/completion-stack.el"
+  (provide 'completion-stack)
+#+end_src
+** The =zettelkasten.el= Module
+This module is about Org-Roam and my Zettelkasten system in Emacs. I have deemed this package to be worthy enough to be an entire section.
+#+begin_src emacs-lisp :tangle "modules/zettelkasten.el"
+  (straight-use-package
+   '(org-roam :type git
+              :host github
+              :repo "org-roam/org-roam"
+              :files (:defaults)))
+
+  (require 'org-roam)
+#+end_src
+*** =zettelkasten.el='s Core Configurations
+These are basic configurations for Org Roam.
+#+begin_src emacs-lisp :tangle "modules/zettelkasten.el"
+  (setq org-roam-verbose t
+        org-roam-directory "~/.emacs.d/zettels/") ; Add org roam directory later
+  (org-roam-setup)
+#+end_src
+*** =zettelkasten.el='s Capture Templates
+We separate our zettelkasten into two slipboxes: a reference one and a main one. The reference slipbox will hold zettels that come from reference material, while the main one will be our original thoughts, which can have some basis on reference zettels.
+#+begin_src emacs-lisp :tangle "modules/zettelkasten.el"
+  (setq org-roam-capture-templates
+        '(("m" "main" plain "%?"
+           :if-new (file+head "main/${slug}.org"
+                              "#+title: ${title}\n")
+           :immediate-finish t
+           :unnarrowed t)
+          ("r" "reference" plain "%?"
+           :if-new (file+head "reference/${citar-citekey}.org"
+                              "#+title: ${note-title}\n")
+           :immediate-finish t
+           :unnarrowed t)
+          ("h" "hierarchy" plain "%?"
+           :if-new (file+head "reference/${slug}.org"
+                              "#+title: ${hierarchy-title}\n")
+           :immediate-finish t
+           :unnarrowed t)
+          ("c" "companion" plain "%?"
+           :if-new (file+head "reference/${slug}.org"
+                              ":PROPERTIES:
+      :ROAM_REFS: @%(citar-select-ref)
+      :END:
+#+title: ${title}\n")
+           :immediate-finish t
+           :unnarrowed t)))
+#+end_src
+*** =zettelkasten.el='s Tagging for Different Slipboxes
+We want to show the slipbox that different notes are in, in our completion menu, so we derive this tagging method.
+#+begin_src emacs-lisp :tangle "modules/zettelkasten.el"
+  (cl-defmethod org-roam-node-type ((node org-roam-node))
+    "Return the TYPE of NODE."
+    (condition-case nil
+        (file-name-nondirectory
+         (directory-file-name
+          (file-name-directory
+           (file-relative-name (org-roam-node-file node) org-roam-directory))))
+      (error "")))
+
+  (setq org-roam-node-display-template
+        (concat "${type:15} ${hierarchy}${title:*} " (propertize "${tags:10}" 'face 'org-tag)))
+#+end_src
+*** =zettelkasten.el='s Evergreen Notes Implementation
+Evergreen notes is a system that can work conjointly with Zettelkasten. It promotes that all notes are drafts, and will only be complete over time.
+#+begin_src emacs-lisp :tangle "modules/zettelkasten.el"
+  (defun tag-new-node-as-draft ()
+    (org-roam-tag-add '("draft")))
+  (add-hook 'org-roam-capture-new-node-hook #'tag-new-node-as-draft)
+#+end_src
+*** =zettelkasten.el='s Capture to Inbox
+We collect our fleeting thoughts through an inbox, where we can =org-capture= into.
+#+begin_src emacs-lisp :tangle "modules/zettelkasten.el"
+  (defun org-roam-capture-slipbox ()
+    (interactive)
+    (org-capture nil "s"))
+#+end_src
+*** =zettelkasten.el='s Change Slug from Underscore to Dash
+In Org-Roam, the slug text replacement will take the title and trim / replace things that are hard to display with a file name. This will overwrite the slug function.
+#+begin_src emacs-lisp :tangle "modules/zettelkasten.el"
+  (require 'ucs-normalize) ; Allows for the unicode normalizing representation function
+
+  (cl-defmethod org-roam-node-slug ((node org-roam-node))
+    "Return the slug of NODE."
+    (let ((title (org-roam-node-title node))
+          (slug-trim-chars '(;; Combining Diacritical Marks https://www.unicode.org/charts/PDF/U0300.pdf
+                             768 ; U+0300 COMBINING GRAVE ACCENT
+                             769 ; U+0301 COMBINING ACUTE ACCENT
+                             770 ; U+0302 COMBINING CIRCUMFLEX ACCENT
+                             771 ; U+0303 COMBINING TILDE
+                             772 ; U+0304 COMBINING MACRON
+                             774 ; U+0306 COMBINING BREVE
+                             775 ; U+0307 COMBINING DOT ABOVE
+                             776 ; U+0308 COMBINING DIAERESIS
+                             777 ; U+0309 COMBINING HOOK ABOVE
+                             778 ; U+030A COMBINING RING ABOVE
+                             780 ; U+030C COMBINING CARON
+                             795 ; U+031B COMBINING HORN
+                             803 ; U+0323 COMBINING DOT BELOW
+                             804 ; U+0324 COMBINING DIAERESIS BELOW
+                             805 ; U+0325 COMBINING RING BELOW
+                             807 ; U+0327 COMBINING CEDILLA
+                             813 ; U+032D COMBINING CIRCUMFLEX ACCENT BELOW
+                             814 ; U+032E COMBINING BREVE BELOW
+                             816 ; U+0330 COMBINING TILDE BELOW
+                             817 ; U+0331 COMBINING MACRON BELOW
+                             )))
+      (cl-flet* ((nonspacing-mark-p (char)
+                   (memq char slug-trim-chars))
+                 (strip-nonspacing-marks (s)
+                   (ucs-normalize-NFC-string
+                    (apply #'string (seq-remove #'nonspacing-mark-p
+                                                (ucs-normalize-NFD-string s)))))
+                 (cl-replace (title pair)
+                   (replace-regexp-in-string (car pair) (cdr pair) title)))
+        (let* ((pairs `(("[^[:alnum:][:digit:].]" . "-") ;; convert anything not alphanumeric or a dot
+                        ("--*" . "-")                   ;; remove sequential underscores
+                        ("^-" . "")                     ;; remove starting underscore
+                        ("-$" . "")))                   ;; remove ending underscore
+               (slug (-reduce-from #'cl-replace (strip-nonspacing-marks title) pairs)))
+          (downcase slug)))))
+#+end_src
+*** =zettelkasten.el='s Dendroam Configuration
+Dendroam is a package that attaches Dendron features to Org Roam. This gives the power of structured notes to Zettelkasten, which is useful for things like software which has a clearly defined schema.
+One must comment out the slug replacement function at the end of this package. It does not work as of now (might pull request a fix in the future).
+#+begin_src emacs-lisp :tangle "modules/zettelkasten.el"
+  (straight-use-package
+   '(dendroam :type git
+              :host github
+              :repo "vicrdguez/dendroam"
+              :files (:defaults)))
+
+  (require 'dendroam)
+#+end_src
+*** =zettelkasten.el='s BibTex Configuration
+This allows for Org Roam to be integrated with bibliography management software.
+#+begin_src emacs-lisp :tangle "modules/zettelkasten.el"
+  (straight-use-package
+   '(org-roam-bibtex :type git
+                     :host github
+                     :repo "org-roam/org-roam-bibtex"
+                     :files (:defaults)))
+
+  (require 'org-roam-bibtex)
+
+  (setq bibtex-completion-bibliography '("~/.emacs.d/zettels/biblio.bib"))   ; This allows bibtex-completion to not throw a fit
+#+end_src
+*** =zettelkasten.el='s Provide
+#+begin_src emacs-lisp :tangle "modules/zettelkasten.el"
+  (provide 'zettelkasten)
+#+end_src
+** The =infofiche.el= Module
+Infofiche is an imaginary means of storing information, akin to paper, but reusable like electronics, in the Teixcalaanli Empire series. This module will handle all types of information management and inflow.
+*** =infofiche.el='s Elfeed Setup
+Elfeed is an RSS reader in Emacs, which can gather data from multiple sources and show them in a list format.
+#+begin_src emacs-lisp :tangle "modules/infofiche.el"
+  (straight-use-package
+   '(elfeed :type git
+            :host github
+            :repo "skeeto/elfeed"
+            :files (:defaults)))
+
+  (require 'elfeed)
+#+end_src
+*** =infofiche.el='s Elfeed-Org Setup
+Elfeed-org allows inputting of elfeed feeds through an org file, way more organized than a lisp structure.
+#+begin_src emacs-lisp :tangle "modules/infofiche.el"
+  (straight-use-package
+   '(elfeed-org :type git
+                :host github
+                :repo "remyhonig/elfeed-org"
+                :files (:defaults)))
+
+  (require 'elfeed-org)
+
+  (elfeed-org) ; Inits the process
+#+end_src
+*** =infofiche.el='s Elfeed Scoring Setup
+Elfeed can be cluttered sometimes with random things from random places. This adjusts how entries are displayed, with more relevant entries higher.
+#+begin_src emacs-lisp :tangle "modules/infofiche.el"
+  (straight-use-package
+   '(elfeed-score :type git
+                  :host github
+                  :repo "sp1ff/elfeed-score"
+                  :files (:defaults)))
+
+  (require 'elfeed-score)
+  (elfeed-score-enable) ; Inits it
+#+end_src
+*** =infofiche.el='s Provide
+#+begin_src emacs-lisp :tangle "modules/infofiche.el"
+  (provide 'infofiche)
+#+end_src
+** The =coding.el= Module
+I would argue that the primary use of Emacs is to write code, being that it /is/ a text editor after all. That being said, this module contains all the resources needed to start programming.
+*** =coding.el='s Eglot Configuration
+#+begin_src emacs-lisp :tangle "modules/coding.el"
+  (straight-use-package
+   '(eglot :type built-in))
+
+  (require 'eglot)
+#+end_src
+*** =coding.el='s Treesitter Configuration
+#+begin_src emacs-lisp :tangle "modules/coding.el"
+  (straight-use-package
+   '(treesit :type built-in))
+
+  (straight-use-package
+   '(treesit-auto :type git
+                  :host github
+                  :repo "renzmann/treesit-auto"
+                  :files (:defaults)))
+
+  (require 'treesit)
+  (require 'treesit-auto)
+
+  (setq treesit-auto-install nil
+        treesit-auto-add-to-auto-mode-alist 'all)
+  (global-treesit-auto-mode)
+#+end_src
+*** =coding.el='s Nix Mode
+NixOS is a Linux distribution that focuses on reproducibility, which is what I am using. This major mode allows me to edit Nix files.
+#+begin_src emacs-lisp :tangle "modules/coding.el"
+  (straight-use-package
+   '(nix-mode :type git
+              :host github
+              :repo "NixOS/nix-mode"
+              :files (:defaults)))
+
+  (require 'nix-mode)
+  (require 'nix-drv-mode)
+  (require 'nix-shell)
+  (require 'nix-repl)
+  (add-to-list 'auto-mode-alist '("\\.nix\\'" . nix-mode)) ; Makes all *.nix files use nix-mode.
+
+#+end_src
+*** =coding.el='s Highlight Numbers Mode
+One thing that really irks me about the Regex syntax highlighting is that it never gets the number literals, even with 'font-lock-number-face', etc. This will help absolve the issue by introducing actual number highlighting.
+#+begin_src emacs-lisp :tangle "modules/coding.el"
+  (straight-use-package
+   '(highlight-numbers :type git
+                       :host github
+                       :repo "Fanael/highlight-numbers"
+                       :files (:defaults)))
+
+  (require 'highlight-numbers)
+
+  (add-hook  'prog-mode-hook 'highlight-numbers-mode) ; Makes all programming modes have number literals be highlighted
+#+end_src
+*** =coding.el='s Provide
+#+begin_src emacs-lisp :tangle "modules/coding.el"
+  (provide 'coding)
+#+end_src
+** The =projecting.el= Module
+This manages project management. Add more later.
+#+begin_src emacs-lisp :tangle "modules/projecting.el"
+  (straight-use-package
+   '(projectile :type git
+                :host github
+                :repo "bbatsov/projectile"
+                :files (:defaults)))
+
+  (require 'projectile)
+#+end_src
+*** =projecting.el='s Projectile Configuration
+Projectile is a package that provides a modern implementation of project management.
+#+begin_src emacs-lisp :tangle "modules/projecting.el"
+  (projectile-mode +1) ; Turns on projectile
+#+end_src
+*** =projecting.el='s Provide
+#+begin_src emacs-lisp :tangle "modules/projecting.el"
+  (provide 'projecting)
+#+end_src
+** The =chem.el= Module
+I have a few packages for chemistry-related stuff (periodic table, etc) and I use them here.
+*** =chem.el='s Periodic Table
+The package =chemtable= is an Emacs periodic table that you can use to get information about various elements.
+#+begin_src emacs-lisp :tangle "modules/chem.el"
+  (straight-use-package
+   '(chemtable :type git
+               :host github
+               :repo "sergiruiztrepat/chemtable"
+               :files (:defaults)))
+
+  (require 'chemtable)
+#+end_src
+*** =chem.el='s Balance Chemical Reactions
+This package balances a chemical equation that you pass into it.
+#+begin_src emacs-lisp :tangle "modules/chem.el"
+  (straight-use-package
+   '(chembalance :type git
+                 :host github
+                 :repo "sergiruiztrepat/chembalance"
+                 :files (:defaults)))
+
+  (require 'chembalance)
+
+  (setq chembalance-arrow-syntax '("=" "=>" "→" "->"))
+#+end_src
+*** =chem.el='s Find Molar Mass
+The package =molar-mass= will calculate the molar mass of a given molecule / element.
+#+begin_src emacs-lisp :tangle "modules/chem.el"
+  (straight-use-package
+   '(molar-mass :type git
+                :host github
+                :repo "sergiruiztrepat/molar-mass"
+                :files (:defaults)))
+
+  (require 'molar-mass)
+#+end_src
+*** =chem.el='s Provide
+#+begin_src emacs-lisp :tangle "modules/chem.el"
+  (provide 'chem)
+#+end_src
+** The =cookie-cutter.el= Module
+This module focuses on templates/snippets, kind of like a cookie cutter for more cookies. I use tempel as my basic snippet system, with cdlatex for latex in org files.
+*** =cookie-cutter.el='s Tempel Core Configuration
+#+begin_src emacs-lisp :tangle "modules/cookie-cutter.el"
+  (straight-use-package
+   '(tempel :type git
+            :host github
+            :repo "minad/tempel"
+            :files (:defaults)))
+
+  (require 'tempel)
+
+  (setq tempel-trigger-prefix nil)
+
+  (add-to-list 'completion-at-point-functions #'tempel-complete)
+#+end_src
+*** =cookie-cutter.el='s File Template Configuration
+#+begin_src emacs-lisp :tangle "modules/cookie-cutter.el"
+
+#+end_src
+*** =cookie-cutter.el='s CDLatex Configuration
+CDLatex is a minor mode promoting fast insertion of LaTeX.
+#+begin_src emacs-lisp :tangle "modules/cookie-cutter.el"
+  (straight-use-package
+   '(cdlatex :type git
+             :host github
+             :repo "cdominik/cdlatex"
+             :files (:defaults)))
+
+  (require 'cdlatex)
+
+  (add-hook 'LaTeX-mode-hook #'turn-on-cdlatex)   ; with AUCTeX LaTeX mode
+  (add-hook 'latex-mode-hook #'turn-on-cdlatex)   ; with Emacs latex mode
+  (add-hook 'org-mode-hook #'turn-on-org-cdlatex) ; with Org Mode
+
+  (setq cdlatex-command-alist '(("ang"         "Insert \\ang{}"
+                                 "\\ang{?}" cdlatex-position-cursor nil t t)
+                                ("si"          "Insert \\SI{}{}"
+                                 "\\SI{?}{}" cdlatex-position-cursor nil t t)
+                                ("sl"          "Insert \\SIlist{}{}"
+                                 "\\SIlist{?}{}" cdlatex-position-cursor nil t t)
+                                ("sr"          "Insert \\SIrange{}{}{}"
+                                 "\\SIrange{?}{}{}" cdlatex-position-cursor nil t t)
+                                ("num"         "Insert \\num{}"
+                                 "\\num{?}" cdlatex-position-cursor nil t t)
+                                ("nl"          "Insert \\numlist{}"
+                                 "\\numlist{?}" cdlatex-position-cursor nil t t)
+                                ("nr"          "Insert \\numrange{}{}"
+                                 "\\numrange{?}{}" cdlatex-position-cursor nil t t)
+                                ("fr"          "Insert \\frac{}{}"
+                                 "\\frac{}{}" cdlatex-position-cursor nil t t)
+                                ("rt"          "Insert \\sqrt[]{}"
+                                 "\\sqrt[?]{}" cdlatex-position-cursor nil t t)))
+#+end_src
+*** =cookie-cutter.el='s Provide
+#+begin_src emacs-lisp :tangle "modules/cookie-cutter.el"
+  (provide 'cookie-cutter)
+#+end_src
+** The =music.el= Module
+This module has all kinds of stuff for music, such as EMMS.
+*** =music.el='s EMMS Configuration
+EMMS stands for Emacs Multi-Media System, and it's basically an interface for connecting to various applications for playing sound and video.
+#+begin_src emacs-lisp :tangle "modules/music.el"
+  (straight-use-package
+   '(emms :type git
+          :host github
+          :repo "emacsmirror/emms"
+          :files (:defaults)))
+
+  (require 'emms)
+
+  (emms-minimalistic)
+
+  ;; Add actual config later
+#+end_src
+*** =music.el='s Provide
+#+begin_src emacs-lisp :tangle "modules/music.el"
+  (provide 'music)
+#+end_src
+** The =games.el= Module
+There are a lot of text-based games that integrate with Emacs, and these are the collections of those.
+*** =games.el='s Minesweeper Game
+#+begin_src emacs-lisp :tangle "modules/games.el"
+#+end_src
+* Emacs Library Modules (=lisp/=)
+This effectively contains all lisp code that isn't part of my configuration and
+instead is for a package that I wrote (which can still appear in =modules/=).
+** The =rappeler.el= Module
+This is basically a short and sweet reminder function. It works only in Windows
+as of now.
+#+begin_src emacs-lisp :tangle "lisp/rappeler.el"
+  ;;; Dependencies
+  (require 'alert-toast)
+
+  ;;; Code
+  (defun 2e-emacs-remind (reminder parent)
+    (with-output-to-temp-buffer "Reminder"
+      (princ (format "%s\n" reminder))
+      (princ (format-time-string "Sent at: %H:%M\n"))
+      (princ (format "Sent by %s\n" parent)))
+    (alert-toast-notify `(:title ,parent :message ,reminder :data (:alarm default :long t))))
+#+end_src
+** The =modeline.el= Module
+This file describes my modeline. My modeline is currently:
+1. A symbol that changes on modification of the file
+2. The buffer name with truncation (fix truncation)
+3. Major Mode Icon for the Buffer
+4. A segment showing the amount of lines and the amount of characters. This will
+   change if you select text, to the amount of lines selected and the amount of
+   characters selected.
+5. A timer for certain things
+6. Whitespace fill
+7. The date and time.
+
+I want to add actual separators (identity) to parts of this modeline, and make
+it cleaner (remove things) as well as add more functionality.
+
+The code is not clean and I'll probably rewrite it.
+#+begin_src emacs-lisp :tangle "lisp/modeline.el"
+    (defun 2e/mode-line-truncate-string-p (str)
+    "returns non-nil if the string should be truncated"
+    (or (< (window-total-width) split-width-threshold)
+         (and (> (length str) mode-line-truncate-length)
+         (not (one-window-p :no-minibuffer)))))
+
+  (defvar-local mode-line-truncate-length 15)                          ; How long should a string at least be until being truncated
+
+  (defun 2e/mode-line-truncate-string (str)                        ; Truncates the string function
+    "Returns the truncated string, else return the original string."
+    (if (2e/mode-line-truncate-string-p str)                              ; If the string should be truncated
+        (concat (substring str 0 mode-line-truncate-length) "...")     ; Add the first 9 characters of the string and append a '...' at the end.
+      str))                                                            ; Else, return original string
+
+    (defun 2e/mode-line-right-align-rest-width ()
+    "Returns the length to be conserved at the right side of the modeline."
+    (1+ (length display-time-string)))
+
+  (defun 2e/mode-line-right-align ()
+    "Returns empty space using the default 'mode-line' face and leaving RESERVE space on the right."
+    (propertize " "
+            'display `(space . (:align-to (- (+ right right-fringe right-margin)  ,(2e/mode-line-right-align-rest-width)))))) ; This adds up all of the space at the right of the modeline, and subtracts the space we want to conserve
+
+  (defun 2e/static-blank ()
+    "Returns a string of one space."
+    " ")
+
+    (defun 2e/mode-line-modified ()
+    "This returns a all-the-icons icon based on the modified state of the buffer."
+    (let* (
+           (config-alist                                                             ; Lets `config-alist` to be a list of information that we pull from
+          '(("*" all-the-icons-faicon "chain-broken" :height 1.2 :v-adjust -0.0)     ; If it's `*`, then call `all-the-icons-faicon` on "chain-broken :height 1.2 :v-adjust -0.0"
+            ("-" all-the-icons-faicon "link" :height 1.2 :v-adjust -0.0)             ; If it's `-`, then call `all-the-icons-faicon` on "link :height 1.2 :v-adjust -0.0"
+            ("%" all-the-icons-faicon "lock" :height 1.2 :v-adjust 0.1)))            ; If it's `%`, then call `all-the-icons-faicon` on "lock :height 1.2 :v-adjust 0.1"
+         (result (cdr (assoc (format-mode-line "%*") config-alist))))                ; Since it's `let*`, the variables are bound sequentially and so `result` can use `config-alist`.
+        (propertize (format "%s" (apply (car result) (cdr result)))                  ; We return a propertized string
+            'face `(:family ,(all-the-icons-faicon-family))                          ; The family of the font is the string returned from the function `all-the-icons-faicon-family`
+            'help-echo (if (string-equal (cadr result) "chain-broken")               ; We add a minibuffer display when we hover over the icon.
+                   (format "Buffer: `%s` is modified." (buffer-name))
+                     (if (string-equal (cadr result) "link")
+                     (format "Buffer: `%s` is saved." (buffer-name))
+                     (format "Buffer: `%s` is read-only." (buffer-name)))))))
+
+    (defun 2e/mode-line-region-info ()
+    "Returns a string containing information from the current region, if there is any. The left number is the lines in the region, and the right number is the characters in the region."
+    (when mark-active                                                ; When the mark is active (there's actually a highlighted region)
+    (let ((lines (count-lines (region-beginning) (region-end)))      ; Set `lines` to be the amount of lines in the region
+          (chars (- (region-end) (region-beginning))))               ; Sets `chars` to be the characters in the region
+      (concat                                                        ; Adds the pencil octicon to the information
+       (propertize (format "%s " (all-the-icons-octicon "pencil"))
+                   'face `(:family ,(all-the-icons-octicon-family))
+           'display `(raise -0.0))
+       (propertize (format "%s:%s" lines chars)
+                   'face `(:height 0.9))))))
+
+  (defun 2e/mode-line-region-buffer-info ()
+    "Returns either the output of `2e/mode-line-region-info`, or if there isn't a region marked, then return a string containing information from the entire buffer, with the left number being the lines in the buffer, and the right number being the characters in the buffer."
+    (if mark-active
+      (2e/mode-line-region-info)
+    (concat
+     (propertize
+      (format "%s" (all-the-icons-octicon "pencil"))
+      'face `(:family ,(all-the-icons-octicon-family))
+      'display `(raise -0.0))
+     (propertize
+      (concat
+       (format "%s:" (car (buffer-line-statistics)))
+       "%i")
+      'face `(:height 0.9)))))
+
+
+  (defun 2e/mode-line-buffer-name ()
+    (2e/mode-line-truncate-string
+     (format "%s"
+             (propertize (2e/mode-line-truncate-string
+                          (buffer-name))
+                         'help-echo (format "Buffer Name: `%s`" (buffer-name))
+                         'face `(:foreground "#dfffee")))))
+
+  (defun 2e/mode-line-mode-icon ()
+    "Returns the mode icon of the buffer."
+    (propertize
+     (format "%s" (all-the-icons-icon-for-mode major-mode :v-adjust 0.0))
+     'help-echo (format "Major Mode: `%s`" major-mode)
+     'face `(:height 170 :family ,(all-the-icons-icon-family-for-buffer))))
+
+  (defun 2e/mode-line-github-vc ()
+    (if vc-mode
+        (let ((branch (cdr (string-split vc-mode "[:-]"))))
+          (concat
+           (propertize
+            (format "%s " (all-the-icons-octicon "git-branch"))
+            'face `(:family ,(all-the-icons-octicon-family) :height 1.3)
+            'display `(raise -0.1))
+           (propertize (2e/mode-line-truncate-string
+                        (format "%s" branch))
+                       'face `(:height 0.9))))
+      (concat
+       (propertize
+        (format "%s " (all-the-icons-octicon "git-branch"))
+        'face `(:family ,(all-the-icons-octicon-family) :height 1.3)
+        'display `(raise -0.1))
+       (propertize (format "%s" "(git init)") 'face `(:height 0.9)))))
+
+  (defun 2e/mode-line-mode-vc-info ()
+    (if vc-mode
+        (let ((branch (cdr (string-split vc-mode "[:-]"))))
+          (concat
+           "("
+           (2e/mode-line-mode-icon)
+           ", "
+           (propertize (2e/mode-line-truncate-string
+                        (format "#%s" branch))
+                       'face `(:height 0.9))
+           ")"))
+      (2e/mode-line-mode-icon)))
+
+
+  (require 'org-timer)
+  (defun 2e/mode-line-org-timer ()
+    (unless (eq (org-timer-value-string) "0:00:00 ")
+      (propertize (format "Timer: %s" (org-timer-value-string)) 'face `(:weight bold))))
+
+    (setq display-time-interval 1)                         ; Updates the time every second
+  (display-time)                                         ; Starts displaying the time
+
+  (defun 2e/mode-line-time ()
+    "returns the time with the associated clock icon with it."
+    (let* ((hour (string-to-number (format-time-string "%I")))
+           (icon (all-the-icons-wicon (format "time-%s" hour) :height 1.3 :v-adjust 0.0)))
+      (concat
+       (propertize (format-time-string " [%d/%a] %k:%M:%S (%z) ") 'face `(:height 0.9))
+       (propertize (format "%s " icon) 'face `(:height 1.0 :family ,(all-the-icons-wicon-family)) 'display '(raise -0.0)))))
+
+
+    (setq-default mode-line-format
+                '("%e"
+                  (:eval (2e/mode-line-modified))
+                  " "
+                  (:eval (2e/mode-line-buffer-name))
+                  " "
+                  (:eval (2e/mode-line-mode-vc-info))
+                  " | "
+                  (:eval (2e/mode-line-region-buffer-info))
+                  " | "
+                  (:eval (2e/mode-line-org-timer))
+                  (:eval (2e/mode-line-right-align))
+                  (:eval (2e/mode-line-time))
+                  ))
+
+  (setq-default header-line-format nil)
+#+end_src
