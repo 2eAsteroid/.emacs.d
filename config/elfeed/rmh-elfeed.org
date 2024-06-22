@@ -1,0 +1,4 @@
+* Web Cartoons
+** [[https://xkcd.com/atom.xml][XKCD]] :funny:science:
+* Blogs :elfeed:
+** [[https://kindness.city/blog/rss.xml][Kindness City]] :philosophy:emacs:

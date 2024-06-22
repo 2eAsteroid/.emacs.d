@@ -2164,3 +2164,11 @@ I'll sort this out later, but for now I'm dumping it all here.
   (provide 'soul-theme)
   ;;; soul-theme-theme.el ends here
 #+end_src
+** The =rmh-elfeed.org= Module
+Elfeed-org is a package that allows for us to define our elfeed feed through an org file.
+#+begin_src org :tangle "config/elfeed/rmh-elfeed.org"
+  * Web Cartoons
+  ** [[https://xkcd.com/atom.xml][XKCD]] :funny:science:
+  * Blogs :elfeed:
+  ** [[https://kindness.city/blog/rss.xml][Kindness City]] :philosophy:emacs:
+#+end_src
