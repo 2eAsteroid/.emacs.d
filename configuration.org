@@ -381,6 +381,12 @@ This is what it says: opening files with super-user permissions. Normal files ca
   (let ((tramp-file-name (concat "/sudo::" (expand-file-name file-name))))
     (find-file tramp-file-name)))
 #+end_src
+*** =essentials.el='s Auto-Save-List Configuration
+I don't see a point in auto-save-list, so I'm disabling it.
+#+begin_src emacs-lisp :tangle "modules/essentials.el"
+  (setq auto-save-list-file-prefix nil)
+  (setq auto-save-list-file-name nil)
+#+end_src
 *** =essentials.el='s Provide
 #+begin_src emacs-lisp :tangle "modules/essentials.el"
   (provide 'essentials)
