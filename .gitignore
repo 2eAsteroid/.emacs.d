@@ -1,0 +1,5 @@
+# Ignore all files auto-created by Emacs
+data/
+games/
+auto-save-list/
+straight/
