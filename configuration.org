@@ -373,6 +373,7 @@ Makes the mouse more usable. TODO Document the code more.
   (define-key global-map (kbd "C-M-<mouse-3>") #'tear-off-window)
 #+end_src
 *** =essentials.el='s Sudo Find File
+This is what it says: opening files with super-user permissions. Normal files cannot be opened with super-user permissions without this, and so we cannot edit special files that only sudo can modify.
 #+begin_src emacs-lisp :tangle "modules/essentials.el"
   (defun sudo-find-file (file-name)
   "Like find file, but opens the file as root."
