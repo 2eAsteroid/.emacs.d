@@ -118,6 +118,7 @@ Because it looks unreadable without a theme, I will be using a temporary theme.
                 :files ("autothemer.el")))
 
   (require 'autothemer)
+  (add-to-list 'load-path (locate-user-emacs-file "config"))
 
   (load-theme 'soul-theme t)
 #+end_src
@@ -162,8 +163,6 @@ Emacs keeps on bothering me with these encoding messages, so I had to define it 
 Code that I write for my configuration as well as configurations of other packages (except for theme and all-the-icons) will be in the directory 'modules', and this adds it to the load path, which is a list of directories that Emacs will search through for Emacs Lisp libraries (code you wrote) to load (which you specify elsewhere with 'load').
 #+begin_src emacs-lisp :tangle "init.el"
   (add-to-list 'load-path (locate-user-emacs-file "modules"))
-
-  (add-to-list 'load-path (locate-user-emacs-file "config"))
 #+end_src
 ** =init.el='s Add Function to Multiple Hooks
 Sometimes I want to add a function to multiple hooks. This accomplishes that.
