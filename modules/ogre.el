@@ -80,4 +80,6 @@
 ;; These are the refiling targets for org-capture
 (setq org-refile-targets '((org-agenda-files . (:tag . "PROJECT"))))
 
+(setq org-persist-directory (locate-user-emacs-file "data/org-persist/"))
+
 (provide 'ogre)
