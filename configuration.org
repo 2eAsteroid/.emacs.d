@@ -2177,3 +2177,10 @@ Elfeed-org is a package that allows for us to define our elfeed feed through an 
   * Blogs :elfeed:
   ** [[https://kindness.city/blog/rss.xml][Kindness City]] :philosophy:emacs:
 #+end_src
+** The =score.el= Module
+Elfeed-score is another package that allows me to define a custom sorting function for entries.
+#+begin_src emacs-lisp :tangle "config/elfeed/score/score.el"
+  ;;; Elfeed Scoring File                                 -*- lisp -*-
+  (("title"
+    (:text "malware" :value 10 :type s)))
+#+end_src
