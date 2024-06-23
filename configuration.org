@@ -42,6 +42,13 @@ some modules might not be loaded.
   (defcustom use-pdfview nil
     "Whether or not you want to use PDFView. Set to t if you do."
     :type :boolean)
+  (defcustom user-name "Daniel Lin"
+    "Your full name, for Emacs purposes."
+    :type :string)
+  (defcustom user-email "two-e-asteroid@outlook.com"
+    :type :string)
+  (defcustom zettelkasten-directory (locate-user-emacs-file "zettels/")
+    :type :string)
 #+end_src
 * Early Initialization of Emacs (=early-init.el=)
 All of the code here will be tangled to =early-init.el=.
@@ -748,7 +755,7 @@ Org Agenda is an aggregation of all your tasks, creating this master view of eve
                                (800 1000 1200 1400 1600 1800 2000)
                                " ┄┄┄┄┄ " "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
         org-agenda-current-time-string "◀-- now -------------------------------------------------"
-        org-agenda-files '("~/.emacs.d/work/tasks.org")
+        org-agenda-files '("~/.emacs.d/data/org/tasks.org")
         org-agenda-tags-column org-tags-column
         org-agenda-sticky t
         org-agenda-inhibit-startup nil

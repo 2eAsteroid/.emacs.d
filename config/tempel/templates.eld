@@ -8,8 +8,8 @@ text-mode
      "│ " (s str)                        " │" n
      "└-" (make-string (length str) ?-) "-┘" n)
 (abox "+-" (make-string (length str) ?-) "-+" n
-      "| " (s str)                       " |" n
-      "+-" (make-string (length str) ?-) "-+" n)
+  "| " (s str)                       " |" n
+  "+-" (make-string (length str) ?-) "-+" n)
 
 lisp-mode emacs-lisp-mode
 
