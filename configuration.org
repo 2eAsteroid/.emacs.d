@@ -881,6 +881,11 @@ I like to use proportional serif fonts for Org-Mode, like ETBembo. Currently, th
   ;; Sets the line spacing in org files to be a bit bigger
   (add-hook 'org-mode-hook (lambda () (setq line-spacing 0.4)))
 #+end_src
+*** =ogre.el='s Org-Persist Litter-Picking
+This puts the org-persist information in =data/= instead.
+#+begin_src emacs-lisp :tangle "modules/ogre.el"
+  (setq org-persist-directory (locate-user-emacs-file "data/org-persist/"))
+#+end_src
 *** =ogre.el='s Provide
 #+begin_src emacs-lisp :tangle "modules/ogre.el"
   (provide 'ogre)
