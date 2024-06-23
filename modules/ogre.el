@@ -38,7 +38,7 @@
                              (800 1000 1200 1400 1600 1800 2000)
                              " ┄┄┄┄┄ " "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
       org-agenda-current-time-string "◀-- now -------------------------------------------------"
-      org-agenda-files '("~/.emacs.d/work/tasks.org")
+      org-agenda-files '("~/.emacs.d/data/org/tasks.org")
       org-agenda-tags-column org-tags-column
       org-agenda-sticky t
       org-agenda-inhibit-startup nil

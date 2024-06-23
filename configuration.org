@@ -46,8 +46,10 @@ some modules might not be loaded.
     "Your full name, for Emacs purposes."
     :type :string)
   (defcustom user-email "two-e-asteroid@outlook.com"
+    "Your email, for Emacs purposes."
     :type :string)
   (defcustom zettelkasten-directory (locate-user-emacs-file "zettels/")
+    "Your zettelkasten directory."
     :type :string)
 #+end_src
 * Early Initialization of Emacs (=early-init.el=)
@@ -125,8 +127,8 @@ Because it looks unreadable without a theme, I will be using a temporary theme.
                 :files ("autothemer.el")))
 
   (require 'autothemer)
-  (add-to-list 'load-path (locate-user-emacs-file "config"))
 
+  (setq custom-theme-directory (locate-user-emacs-file "config/"))
   (load-theme 'soul-theme t)
 #+end_src
 ** =init.el='s all-the-icons Support

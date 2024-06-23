@@ -7,6 +7,15 @@
 (defcustom use-pdfview nil
   "Whether or not you want to use PDFView. Set to t if you do."
   :type :boolean)
+(defcustom user-name "Daniel Lin"
+  "Your full name, for Emacs purposes."
+  :type :string)
+(defcustom user-email "two-e-asteroid@outlook.com"
+  "Your email, for Emacs purposes."
+  :type :string)
+(defcustom zettelkasten-directory (locate-user-emacs-file "zettels/")
+  "Your zettelkasten directory."
+  :type :string)
 
 ;;; Bootstrapping straight.el
 (defvar bootstrap-version)
@@ -36,6 +45,7 @@
 
 (require 'autothemer)
 
+(setq custom-theme-directory (locate-user-emacs-file "config/"))
 (load-theme 'soul-theme t)
 
 (straight-use-package
@@ -63,8 +73,6 @@
 (prefer-coding-system 'utf-8)
 
 (add-to-list 'load-path (locate-user-emacs-file "modules"))
-
-(add-to-list 'load-path (locate-user-emacs-file "config"))
 
 (defun add-function-to-hooks (function hooks)
   "Adds FUNCTION to every hook in the list HOOK."
