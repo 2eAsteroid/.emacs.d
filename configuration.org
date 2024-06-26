@@ -4,6 +4,7 @@
 * Why?
 I've always been searching for some program that would just click for me: Obsidian, Vivaldi, VS Code, Vim, etc. The program should feel intuitive to me, and easy to use. However, I haven't found that program. Therefore, I'm just going to use Emacs and make the program that I'm looking for. To do that, I'm implementing a literate configuration file.
 * Planning / Roadmap
+ - Olivetti Mode
  - Customized theme
  - Better mode line
  - One mode line (header line) + Chimera Tabs ?
@@ -22,8 +23,8 @@ I've always been searching for some program that would just click for me: Obsidi
  - Ace stuff?
  - Sunrise Commander
  - tree file explorer
- - Flycheck
- - AI
+ - Flymake
+ - AI ?
  - Learn magit
  - eat / vterm
  - notmuch
@@ -208,6 +209,7 @@ dashboard is in front of essentials.
   (require 'chem)
   (require 'cookie-cutter)
   (require 'music)
+  (require 'writing)
 #+end_src
 
 * Emacs Configuration Modules (=modules/=)
@@ -1483,6 +1485,29 @@ EMMS stands for Emacs Multi-Media System, and it's basically an interface for co
 There are a lot of text-based games that integrate with Emacs, and these are the collections of those.
 *** =games.el='s Minesweeper Game
 #+begin_src emacs-lisp :tangle "modules/games.el"
+#+end_src
+** The =writing.el= Module
+Although I use Emacs for coding, I also use it as a dedicated writing environment. These are some things that massively improve the experience.
+*** =writing.el='s Olivetti Configuration
+Olivetti is an Emacs minor mode that balances window margins to keep text centered.
+#+begin_src emacs-lisp :tangle "modules/writing.el"
+  (straight-use-package
+   '(olivetti :type git
+              :host github
+              :repo "rnkn/olivetti"
+              :files (:defaults)))
+
+  (require 'olivetti)
+
+  (add-function-to-hooks #'olivetti-mode '(text-mode-hook
+                                           prog-mode-hook
+                                           Info-mode-hook
+                                           ; pdf-view-mode-hook
+                                           org-mode-hook))
+#+end_src
+*** =writing.el='s Provide
+#+begin_src emacs-lisp :tangle "modules/writing.el"
+  (provide 'writing)
 #+end_src
 * Emacs Library Modules (=lisp/=)
 This effectively contains all lisp code that isn't part of my configuration and

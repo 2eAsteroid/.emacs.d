@@ -124,29 +124,30 @@
 (custom-link                          (:foreground ectoplasm :underline t))
 
 ;; org-mode
-  (org-done                             (:foreground tears :strike-through t)) ; face for DONE
-  (org-code                             (:background overlay)) ; Face for monospaced code fonts like inline code
-  (org-meta-line                        (:background overlay :foreground subtle)) ; Lines starting with #+ that aren't blocks
-  (org-block                            (:background overlay)) ; Contents of the blocks
-  (org-block-begin-line                 (:background surface :foreground tears))
-  (org-block-end-line	                (:background surface :foreground tears))
-  (org-headline-done                    (:foreground text :strike-through t))
-  (org-todo                             (:foreground blood))
-  (org-headline-todo                    (:foreground surface))
-  (org-upcoming-deadline                (:foreground tears))
-  (org-footnote                         (:foreground spirit))
-  (org-indent                           (:foreground surface))
-  (org-hide	                            (:foreground surface))
-  (org-date                             (:foreground text))
-  (org-ellipsis                         (:foreground text))
-  (org-level-1                          (:foreground tears :height 1.3))
-  (org-level-2                          (:foreground spirit :height 1.15))
-  (org-level-3                          (:foreground ectoplasm :height 1.05))
-  (org-level-4                          (:foreground text))
-  (org-level-5                          (:foreground text))
-  (org-level-6                          (:foreground blood))
-  (org-level-7                          (:foreground blood))
-  (org-level-8                          (:foreground ectoplasm))
+(org-done                             (:foreground tears :strike-through t)) ; face for DONE
+(org-code                             (:background overlay)) ; Face for monospaced code fonts like inline code
+(org-meta-line                        (:background overlay :foreground subtle)) ; Lines starting with #+ that aren't blocks
+(org-block                            (:background overlay)) ; Contents of the blocks
+(org-block-begin-line                 (:background surface :foreground tears)) ; start of block
+(org-block-end-line	                (:background surface :foreground tears)) ; end of block
+(org-headline-done                    (:foreground text :strike-through t)) ; The contents of the DONE headline
+(org-todo                             (:foreground blood)) ; Face for TODO
+(org-headline-todo                    (:foreground surface)) ; the contents of the todo headline
+(org-upcoming-deadline                (:foreground blood)) ; Upcoming deadline
+(org-footnote                         (:foreground text)) ; Footnote
+(org-indent                           (:foreground surface)) ; Text to hide
+(org-hide	                            (:foreground surface)) ; Text to hide
+(org-date                             (:foreground tears)) ; Org dates
+(org-ellipsis                         (:foreground text)) ; Org ellipses for hiding headlines
+(org-document-title                   (:height 2.0)) ; Document Title (after #+TITLE: )
+(org-level-1                          (:foreground tears :height 1.3)) ; Level 1 heading
+(org-level-2                          (:foreground spirit :height 1.15)) ; etc
+(org-level-3                          (:foreground ectoplasm :height 1.05)) ; etc
+(org-level-4                          (:foreground blood)) ; etc
+(org-level-5                          (:foreground tears)) ; etc
+(org-level-6                          (:foreground spirit)) ; etc
+(org-level-7                          (:foreground ectoplasm)) ; etc
+(org-level-8                          (:foreground blood)) ; etc
 
 ;; which-key
   (which-key-key-face                   (:inherit 'font-lock-variable-name-face))

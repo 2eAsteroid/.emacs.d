@@ -101,3 +101,4 @@
 (require 'chem)
 (require 'cookie-cutter)
 (require 'music)
+(require 'writing)
