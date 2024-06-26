@@ -43,8 +43,6 @@
               :repo "jasonm23/autothemer"
               :files ("autothemer.el")))
 
-(require 'autothemer)
-
 (setq custom-theme-directory (locate-user-emacs-file "config/"))
 (load-theme 'soul-theme t)
 

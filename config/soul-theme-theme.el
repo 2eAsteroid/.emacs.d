@@ -1,188 +1,154 @@
-;;; package --- A beautiful theme.
+;;; package --- A cool looking theme
 ;;; Commentary:
-;;; very monochrome theme
-
+;;; A very cool theme.
 
 ;;; Code:
+
 (eval-when-compile
   (require 'cl-lib))
 
 (require 'autothemer)
 
 (unless (>= emacs-major-version 24)
-  (error "Requires Emacs 24 or later"))
-
+  (error "Requires Emacs 24 or later."))
 
 (autothemer-deftheme
- soul-theme "For professionals."
+ soul-theme "Light theme that seeks to emulate paper sort of."
 
- ((((class color) (min-colors #xFFFFFF))        ; col 1 GUI/24bit
-   ((class color) (min-colors #xFF)))           ; col 2 Xterm/256
+((((class color) (min-colors #xFFFFFF))        ; col 1 GUI/24bit
+  ((class color) (min-colors #xFF)))           ; col 2 Xterm/256
 
-  ;; Define our color palette
-  (spirit           "#9A7AA0" "#9977AA")  ; The official purple of this theme.
-  (ectoplasm        "#8CB369" "#88BB66")  ; The official green of this theme.
-  (blood            "#BC4B51" "#CC0000")  ; The official red of this theme.
-  (tears            "#5B8E7D" "#558877")  ; The official blue of this theme.
-  (text             "#27221F" "#000000")  ; The standard text color; this is used for all text.
-  (subtle           "#000000" "#000000")  ; The slightly-higher contrast gives it a subtlety. Used for especially important text.
-  (overlay          "#F9FBFF" "#ffffff")  ; Leaves; this is used for temporary backgrounds, like popups or temporary buffers (anything above the surface)
-  (surface          "#F4EDED" "#ffffff")  ; Base of all background colors; this is used for the main backgrounds (files, etc)
-  (base             "#F9FBFF" "#FFFFFF")) ; Basically the same as overlay, but this is for below the surface.
+ ;; Define our color palette
+ (spirit           "#9A7AA0" "#9977AA")  ; The official purple of this theme.
+ (ectoplasm        "#8CB369" "#88BB66")  ; The official green of this theme.
+ (blood            "#BC4B51" "#CC0000")  ; The official red of this theme.
+ (tears            "#5B8E7D" "#558877")  ; The official blue of this theme.
+ (text             "#27221F" "#000000")  ; The standard text color; this is used for all text.
+ (subtle           "#ada098" "#000000")  ; The slightly-higher contrast gives it a subtlety. Used for especially important text.
+ (overlay          "#EDE1E1" "#ffffff")  ; Leaves; this is used for temporary backgrounds, like popups or temporary buffers (anything above the surface)
+ (surface          "#F4EDED" "#ffffff")  ; Base of all background colors; this is used for the main backgrounds (files, etc)
+ (base             "#FBF9F9" "#FFFFFF")) ; Basically the same as overlay, but this is for below the surface.
 
- ;; Customize faces
- (
-  (default                              (:background surface :foreground text :family "Berkeley Mono"  :height 185)) ; Default
-  (border                               (:foreground text)) ; Frame Border
-  (bookmark-face                        (:foreground blood)) ; Color of the bookmark symbol in the gutter
-  (button                               (:foreground ectoplasm)) ; Color of buttons
-  (child-frame                          (:foreground surface)) ; Color of child frames?
-  (child-frame-border                   (:foreground surface)) ; Color of the border
-  (cursor                               (:background text :foreground surface :distant-foreground text)) ; Cursor face
-  (error                                (:foreground blood)) ; Color of errors
-  (link                                 (:foreground ectoplasm)) ; Color of links
-  (fringe                               (:foreground base)) ; Color of gutter at the left
-  (file-name-shadow                     (:foreground text)) ; Color of dimmed out file name parts
-  (glyph-face                           (:background blood :foreground text)) ; Color of glyphs that aren't supposed to be there?
-  (glyphless-char                       (:foreground text)) ; Color of glyphs with no graphic representation
-  (header-line                          (:background text :foreground surface)) ;
-  (highlight                            (:background ectoplasm :foreground text))
-  (hl-line                              (:background overlay :distant-foreground text))
-  (homoglyph                            (:foreground blood))
-  (line-number                          (:background overlay :foreground text))
-  (line-number-current-line             (:background overlay :bold t))
-  (match                                (:background blood :foreground base))
-  (menu                                 (:foreground text))
-  (fill-column-indicator                (:foreground text))
-  (mode-line                            (:background text :foreground surface))
-  (mode-line-inactive                   (:background surface :foreground text))
-  (mode-line-active                     (:background text :foreground surface))
-  (mode-line-highlight                  (:foreground ectoplasm))
-  (mode-line-buffer-id                  (:bold t))
-  (numbers                              (:background blood))
-  (region                               (:background text :distant-foreground surface))
-  (tooltip                              (:background text :foreground base))
-  (shadow                               (:foreground text))
-  (success                              (:foreground ectoplasm))
-  (vertical-border                      (:foreground overlay))
-  (warning                              (:foreground tears))
-  (window-divider                       (:foreground surface :distant-foreground overlay))
+;; Customize faces
+(
+ (default                              (:background surface :foreground text :family "Berkeley Mono"  :height 185)) ; Default
+ (border                               (:foreground text)) ; Frame Border
+ (bookmark-face                        (:foreground blood)) ; Color of the bookmark symbol in the gutter
+ (button                               (:foreground ectoplasm)) ; Color of buttons
+ (child-frame                          (:foreground surface)) ; Color of child frames?
+ (child-frame-border                   (:foreground surface)) ; Color of the border
+ (cursor                               (:background text :foreground surface :distant-foreground text)) ; Cursor face
+ (error                                (:foreground blood)) ; Color of errors
+ (link                                 (:foreground ectoplasm)) ; Color of links
+ (fringe                               (:foreground base)) ; Color of gutter at the left
+ (file-name-shadow                     (:foreground text)) ; Color of dimmed out file name parts
+ (glyph-face                           (:background blood :foreground text)) ; Color of glyphs that aren't supposed to be there?
+ (glyphless-char                       (:foreground text)) ; Color of glyphs with no graphic representation
+ (header-line                          (:background text :foreground surface)) ; Header Line
+ (highlight                            (:background ectoplasm :foreground text)) ; general highlight face
+ (hl-line                              (:background overlay :distant-foreground text)) ; For hl-line-mode
+ (homoglyph                            (:foreground blood)) ; glyphs that look the same
+ (line-number                          (:background overlay :foreground text)) ; General line numbers face (for line-number-mode)
+ (line-number-current-line             (:background overlay :bold t)) ; Line number for current line
+ (match                                (:background blood :foreground base)) ; Highlight perm. matches
+ (menu                                 (:foreground text)) ; For menu-bar, menus, etc
+ (fill-column-indicator                (:foreground text)) ; Face for fill column indivactor in modeline ?
+ (mode-line                            (:background text :foreground surface :box (:line-width '(10 . 10) :color text))) ; Modeline face (all-encompassing)
+ (mode-line-inactive                   (:background text :foreground subtle :box (:line-width '(10 . 10) :color text))) ; Mode line face for inactive modelines
+ (mode-line-active                     (:background text :foreground surface :box (:line-width '(10 . 10) :color text))) ; Active mode line
+ (mode-line-highlight                  (:foreground ectoplasm)) ; ???
+ (mode-line-buffer-id                  (:bold t)) ; Face of the buffer-name variable thing
+ (numbers                              (:background blood)) ; ???
+ (region                               (:background text :distant-foreground surface)) ; What the region's face is
+ (tooltip                              (:background text :foreground base)) ; Tool tip face ???
+ (shadow                               (:foreground subtle)) ; General subtle / shadow face
+ (success                              (:foreground ectoplasm)) ; Success face for succeeding in stuff
+ (vertical-border                      (:foreground overlay)) ; ???
+ (warning                              (:foreground tears)) ; For warnings in code
+ (window-divider                       (:foreground surface :distant-foreground overlay)) ; ???
 
-  (whitespace-newline                   (:foreground text))
-  (whitespace-space                     (:foreground text))
-  (whitespace-trailing                  (:foreground base :background tears))
-  (trailing-whitespace                  (:foreground text :background blood))
+ (whitespace-newline                   (:foreground text)) ; White space stuff for the rest.
+ (whitespace-space                     (:foreground text))
+ (whitespace-trailing                  (:foreground base :background tears))
+ (trailing-whitespace                  (:foreground text :background blood))
 
-  ;; ;; Font lock
-  (font-lock-keyword-face               (:foreground text))
-  (font-lock-type-face                  (:foreground text))
-  (font-lock-builtin-face               (:foreground text))
-  (font-lock-function-name-face         (:foreground tears))
-  (font-lock-variable-name-face         (:foreground text))
-  (font-lock-comment-face               (:foreground blood))
-  (font-lock-doc-face                   (:foreground blood))
-  (font-lock-string-face                (:foreground ectoplasm))
-  (font-lock-warning-face               (:foreground "#FF0000"))
-  (font-lock-constant-face              (:foreground spirit))
-  (font-lock-regexp-grouping-backslash  (:foreground ectoplasm))
+;; ;; Font lock
+(font-lock-keyword-face               (:foreground text)) ; Keywords
+(font-lock-type-face                  (:foreground text)) ; Types
+(font-lock-builtin-face               (:foreground text)) ; Built-in Functions
+(font-lock-function-name-face         (:foreground tears)) ; Function definition Name
+(font-lock-function-call-face         (:foreground text)) ; Function Call Face
+(font-lock-variable-name-face         (:foreground text)) ; Variable Definition
+(font-lock-comment-face               (:foreground blood)) ; Comment Definition (not delimiter)
+(font-lock-doc-face                   (:foreground blood)) ; Documentation string Face
+(font-lock-string-face                (:foreground ectoplasm)) ; String Face
+(font-lock-number-face                (:foreground spirit)) ; Numbers face
+(font-lock-warning-face               (:foreground "#FF0000")) ; Warning Face
+(font-lock-constant-face              (:foreground spirit)) ; Constant face (keywords, symbols)
+(font-lock-regexp-grouping-backslash  (:foreground text)) ; Backslash for regexp
 
-  (font-lock-reference-face				(:foreground text))
-  (font-lock-negation-char-face         (:foreground text))
-  (font-lock-comment-delimiter-face     (:foreground blood))
-  (font-lock-doc-markup-face            (:foreground blood))
-  (font-lock-preprocessor-face	   		(:foreground text))
+(font-lock-reference-face	          (:foreground text)) ; ???
+(font-lock-negation-char-face         (:foreground text)) ; Negation Chars ?
+(font-lock-comment-delimiter-face     (:foreground blood)) ; Comment delimiters (#, ;, */ */)
+(font-lock-doc-markup-face            (:foreground blood)) ; Doc markup in Documentation
+(font-lock-preprocessor-face	   	  (:foreground text)) ; Preprocessor stuff
 
-  (elisp-shorthand-font-lock-face       (:foreground text))
+(elisp-shorthand-font-lock-face       (:foreground text)) ; Abbreviation of function/variable names
 
-  (highlight-operators-face             (:foreground tears))
-  (highlight-quoted-symbol              (:foreground ectoplasm))
-  (highlight-numbers-face               (:foreground tears))
-  (highlight-symbol-face                (:background text :foreground subtle))
-  (info-xref                            (:foreground blood))
+(highlight-operators-face             (:foreground text)) ; Operator stuff
+(highlight-quoted-symbol              (:foreground ectoplasm)) ; Quoted?
+(highlight-numbers-face               (:foreground spirit)) ; Numbers?
+(highlight-symbol-face                (:foreground text)) ; Symbols?
+(info-xref                            (:foreground ectoplasm)) ; Crossreferences for Info (links, basically)
 
-  (minibuffer-prompt-end                (:foreground tears))
-  (minibuffer-prompt                    (:foreground tears))
-  (epa-mark                             (:foreground tears))
-  (dired-mark                           (:foreground tears))
-  (dired-ignored                        (:background blood))
+(minibuffer-prompt-end                (:foreground tears)) ; Minibuffer prompt stuff
+(minibuffer-prompt                    (:foreground tears)) ; Minibuffer prompt stuff
+(epa-mark                             (:foreground tears)) ; EPA?
+(dired-mark                           (:foreground blood)) ; Dired Mark
+(dired-ignored                        (:foreground subtle)) ; Ignored Dired Stuff
 
-  (iedit-occurrence                     (:background ectoplasm :foreground base))
-  (iedit-read-only-occurrence           (:background spirit :foreground base))
+(iedit-occurrence                     (:background ectoplasm :foreground base)) ; IEdit?
+(iedit-read-only-occurrence           (:background spirit :foreground base)) ; Iedit?
 
-  (trailing-ectoplasmwaterspace              (:background overlay))
+;;elfeed
+(elfeed-search-feed-face              (:foreground spirit))
+(elfeed-search-tag-face               (:foreground ectoplasm))
 
-  ;; ;; Battery colors
-  (doom-modeline-battery-critical       (:inherit 'error))
-  (doom-modeline-battery-warning        (:inherit 'warning))
-  (doom-modeline-battery-charging       (:foreground text))
-  (doom-modeline-battery-error          (:inherit 'error))
-  (doom-modeline-battery-normal         (:foreground text))
-  (doom-modeline-battery-full           (:foreground text))
+;; message colors
+(message-header-name                  (:foreground text))
+(message-header-other                 (:foreground blood))
+(message-header-subject               (:foreground blood))
+(message-header-to                    (:foreground ectoplasm))
+(message-header-cc                    (:foreground spirit))
+(message-header-xheader               (:foreground ectoplasm))
+(custom-link                          (:foreground ectoplasm :underline t))
 
-  ;; Doom visual state
-  (doom-modeline-evil-motion-state      (:foreground ectoplasm))
-  (doom-modeline-evil-emacs-state       (:foreground ectoplasm))
-  (doom-modeline-evil-insert-state      (:foreground ectoplasm))
-  (doom-modeline-evil-normal-state      (:foreground text))
-  (doom-modeline-evil-visual-state      (:foreground ectoplasm))
-  (doom-modeline-evil-replace-state     (:foreground tears))
-  (doom-modeline-evil-operator-state    (:foreground ectoplasm))
+;; org-mode
+  (org-done                             (:foreground tears :strike-through t)) ; face for DONE
+  (org-code                             (:background overlay)) ; Face for monospaced code fonts like inline code
+  (org-meta-line                        (:background overlay :foreground subtle)) ; Lines starting with #+ that aren't blocks
+  (org-block                            (:background overlay)) ; Contents of the blocks
+  (org-block-begin-line                 (:background surface :foreground tears))
+  (org-block-end-line	                (:background surface :foreground tears))
+  (org-headline-done                    (:foreground text :strike-through t))
+  (org-todo                             (:foreground blood))
+  (org-headline-todo                    (:foreground surface))
+  (org-upcoming-deadline                (:foreground tears))
+  (org-footnote                         (:foreground spirit))
+  (org-indent                           (:foreground surface))
+  (org-hide	                            (:foreground surface))
+  (org-date                             (:foreground text))
+  (org-ellipsis                         (:foreground text))
+  (org-level-1                          (:foreground tears :height 1.3))
+  (org-level-2                          (:foreground spirit :height 1.15))
+  (org-level-3                          (:foreground ectoplasm :height 1.05))
+  (org-level-4                          (:foreground text))
+  (org-level-5                          (:foreground text))
+  (org-level-6                          (:foreground blood))
+  (org-level-7                          (:foreground blood))
+  (org-level-8                          (:foreground ectoplasm))
 
-  (doom-modeline-project-dir            (:foreground text))
-  (doom-modeline-buffer-path            (:foreground text))
-  (doom-modeline-buffer-file            (:foreground text))
-  (doom-modeline-buffer-major-mode      (:foreground ectoplasm))
-  (doom-modeline-buffer-modified        (:foreground text))
-  (doom-modeline-error                  (:background tears))
-  (doom-modeline-info                   (:foreground subtle))
-  (doom-modeline-time                   (:foreground text))
-  (doom-modeline-project-dir            (:foreground ectoplasm))
-  (doom-modeline-bar                    (:background blood))
-  (doom-modeline-bar-inactive           (:background overlay))
-  (doom-modeline-panel                  (:background ectoplasm :foreground base))
-  (doom-modeline                        (:foreground text))
-  (doom-themes-visual-bell              (:background tears))
-
-  ;;elfeed
-  (elfeed-search-feed-face              (:foreground spirit))
-  (elfeed-search-tag-face               (:foreground ectoplasm))
-
-  ;; message colors
-  (message-header-name                  (:foreground text))
-  (message-header-other                 (:foreground blood))
-  (message-header-subject               (:foreground blood))
-  (message-header-to                    (:foreground ectoplasm))
-  (message-header-cc                    (:foreground spirit))
-  (message-header-xheader               (:foreground ectoplasm))
-  (custom-link                          (:foreground ectoplasm :underline t))
-
-  ;; org-mode
-  (with-eval-after-load "org"
-    (org-done                             (:foreground text))
-    (org-code                             (:background base))
-    (org-meta-line                        (:background overlay :foreground ectoplasm))
-    (org-block                            (:background base))
-    (org-block-begin-line                 (:background base :foreground text))
-    (org-block-end-line	                (:background base :foreground text))
-    (org-headline-done                    (:foreground text :strike-through t))
-    (org-todo                             (:foreground spirit))
-    (org-headline-todo                    (:foreground surface))
-    (org-upcoming-deadline                (:foreground tears))
-    (org-footnote                         (:foreground spirit))
-    (org-indent                           (:foreground surface))
-    (org-hide	                            (:foreground surface))
-    (org-date                             (:foreground text))
-    (org-ellipsis                         (:foreground text))
-    (org-level-1                          (:foreground tears :height 1.3))
-    (org-level-2                          (:foreground spirit :height 1.15))
-    (org-level-3                          (:foreground ectoplasm :height 1.05))
-    (org-level-4                          (:foreground text))
-    (org-level-5                          (:foreground text))
-    (org-level-6                          (:foreground blood))
-    (org-level-7                          (:foreground blood))
-    (org-level-8                          (:foreground ectoplasm)))
-
-  ;; which-key
+;; which-key
   (which-key-key-face                   (:inherit 'font-lock-variable-name-face))
   (which-func							(:inherit 'font-lock-function-name-face))
   (which-key-group-description-face     (:foreground tears))
