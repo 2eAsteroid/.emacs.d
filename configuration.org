@@ -1,8 +1,6 @@
-#+title: Sea Emacs / Seamacs
+#+title: Emacs Automata
 #+author: 2e Asteroid
 
-* Why?
-I've always been searching for some program that would just click for me: Obsidian, Vivaldi, VS Code, Vim, etc. The program should feel intuitive to me, and easy to use. However, I haven't found that program. Therefore, I'm just going to use Emacs and make the program that I'm looking for. To do that, I'm implementing a literate configuration file.
 * Planning / Roadmap
  - Olivetti Mode
  - Customized theme
@@ -143,6 +141,7 @@ One thing about all-the-icons is that it's stupidly hard to build, because it ne
                    :files (:defaults ("data" "data/data-*.el"))))
 
   (require 'all-the-icons)
+
   (let ((default-directory "~/.emacs.d/data/all-the-icons/"))
     (if (not (file-directory-p "~/.emacs.d/data/all-the-icons/"))
         (progn (make-directory "~/.emacs.d/data/all-the-icons/" t)
@@ -210,6 +209,7 @@ dashboard is in front of essentials.
   (require 'cookie-cutter)
   (require 'music)
   (require 'writing)
+  (require 'magic)
 #+end_src
 
 * Emacs Configuration Modules (=modules/=)
@@ -232,7 +232,7 @@ Just a bunch of random settings.
                 blink-cursor-mode nil                   ; Don't blink the cursor
                 tab-width 4                             ; Sets a tab to be four spaces
                 x-stretch-cursor nil                    ; Cursor is a constant size and doesn't change based on text under it
-                delete-old-versions t                   ; Asks for confirmation for removing excess backup versions
+                delete-old-versions t                   ; Don't ask for confirmation for removing excess backup versions
                 version-control t                       ; Use version control to number backup versions
                 inhibit-compacting-font-caches t        ; Stops the font cache from compacting -> higher memory footprint but increases speed for certain fonts
                 display-line-numbers-type 'relative     ; Display line numbers relatively (current line has the actual line number and the others have the distance between them and the current line)
@@ -243,7 +243,7 @@ Just a bunch of random settings.
                 mode-require-final-newline 'visit-save  ; Adds a newline (if it doesn't already have one) to the end of files when you first open it and when you save
                 eval-expression-print-length nil        ; When returning the value of an evaluated expression, don't truncate it at all
                 scroll-conservatively 101               ; When the cursor leaves the screen, scroll up/down enough text to /just/ bring the cursor back into view
-                backup-by-copying t                     ; Instead of symlinking, make a copy for the backup. Apparently symlinks are bad ?
+                backup-by-copying t                     ; Instead of symlinking, make a copy for the backup.
                 tab-always-indent 'complete             ; First trys to indent, then complete
                 kill-do-not-save-duplicates t)          ; When saving something to the kill ring, if it duplicates the last entry, don't save it.
 
@@ -252,6 +252,8 @@ Just a bunch of random settings.
 *** =essentials.el='s Show/Remove Trailing Whitespace
 This sets up how trailing whitespace (whitespace after the last character in a
 line) is shown. When I save, the trailing whitespace is removed.
+
+Add an elfeed show mode hook.
 #+begin_src emacs-lisp :tangle "modules/essentials.el"
   (setq-default show-trailing-whitespace t) ; Show trailing whitespace after a line for cleanup
   (add-function-to-hooks (lambda () (setq show-trailing-whitespace nil))
@@ -447,9 +449,9 @@ I keep it around
                   :host github
                   :repo "emacsmirror/rainbow-mode"
                   :files (:defaults)))
-  (require 'rainbow-mode)
 
   (add-hook 'prog-mode-hook 'rainbow-mode) ; Adds rainbow-mode to all programming modes.
+
   (setq rainbow-x-colors nil)              ; Prevents words like 'gold' from being highlighted
 #+end_src
 *** =fonts.el='s Ligatures
@@ -492,13 +494,12 @@ your system. No Littering.el is meant to combat this dilemma.
         (expand-file-name "config/" user-emacs-directory))
   (defvar no-littering-var-directory
         (expand-file-name "data/" user-emacs-directory))
-
-  (require 'no-littering)
   #+end_src
 *** =no-litter.el=: Disable no-littering files from appearing in recentf
 I think this is intuitive to understand and shouldn't warrant any more explanations.
 #+begin_src emacs-lisp :tangle "modules/no-litter.el"
   (require 'recentf)
+
   (add-to-list 'recentf-exclude                                          ; Excludes all no-littering files from recentf
                (recentf-expand-file-name no-littering-var-directory))
   (add-to-list 'recentf-exclude                                          ; ^
@@ -521,18 +522,19 @@ whenever we go idle and back. When we are actively using our Emacs, you should
 ideally not garbage collect at all. Only when we aren't doing anything should we
 garbage collect.
 #+begin_src emacs-lisp :tangle "modules/gc-magic-hack.el"
-    (straight-use-package
-     '(gcmh :type git
-            :host github
-            :repo "emacsmirror/gcmh"
-            :files (:defaults)))
-    (require 'gcmh)
+  (straight-use-package
+   '(gcmh :type git
+          :host github
+          :repo "emacsmirror/gcmh"
+          :files (:defaults)))
+
+  (require 'gcmh)
 #+end_src
 *** =gc-magic-hack.el='s Configuration
 #+begin_src emacs-lisp :tangle "modules/gc-magic-hack.el"
   (setq gcmh-low-cons-threshold 800000   ; 800 kB
         gcmh-high-cons-threshold 3200000 ; 1.6 mB
-        gcmh-idle-delay 20               ; 15 sec.
+        gcmh-idle-delay 20               ; 20 sec.
         gcmh-verbose t)                  ; Tells us when it garbage collects.
   (gcmh-mode)
 #+end_src
@@ -1149,7 +1151,7 @@ We want to show the slipbox that different notes are in, in our completion menu,
       (error "")))
 
   (setq org-roam-node-display-template
-        (concat "${type:15} ${hierarchy}${title:*} " (propertize "${tags:10}" 'face 'org-tag)))
+        (concat "${type:15} ${hierarchy}${title:*}${spacing}" (propertize "${tags:10}" 'face 'org-tag)))
 #+end_src
 *** =zettelkasten.el='s Evergreen Notes Implementation
 Evergreen notes is a system that can work conjointly with Zettelkasten. It promotes that all notes are drafts, and will only be complete over time.
@@ -1217,7 +1219,7 @@ One must comment out the slug replacement function at the end of this package. I
   (straight-use-package
    '(dendroam :type git
               :host github
-              :repo "vicrdguez/dendroam"
+              :repo "2eAsteroid/dendroam"
               :files (:defaults)))
 
   (require 'dendroam)
@@ -1505,9 +1507,35 @@ Olivetti is an Emacs minor mode that balances window margins to keep text center
                                            ; pdf-view-mode-hook
                                            org-mode-hook))
 #+end_src
+*** =writing.el='s Hydra Configuration
+#+begin_src emacs-lisp :tangle "modules/writing.el"
+  (straight-use-package
+   '(hydra :type git
+           :host github
+           :repo "abo-abo/hydra"
+           :files (:defaults)))
+
+  (require 'hydra)
+#+end_src
 *** =writing.el='s Provide
 #+begin_src emacs-lisp :tangle "modules/writing.el"
   (provide 'writing)
+#+end_src
+** The =magic.el= Module
+This is for magit.
+*** =magic.el='s Magit Core Config
+#+begin_src emacs-lisp :tangle "modules/magic.el"
+  (straight-use-package
+   '(magit :type git
+           :host github
+           :repo "magit/magit"
+           :files (:defaults)))
+
+  (require 'magit)
+#+end_src
+*** =magic.el='s Provide
+#+begin_src emacs-lisp :tangle "modules/magic.el"
+  (provide 'magic)
 #+end_src
 * Emacs Library Modules (=lisp/=)
 This effectively contains all lisp code that isn't part of my configuration and

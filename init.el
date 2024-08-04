@@ -102,3 +102,4 @@
 (require 'cookie-cutter)
 (require 'music)
 (require 'writing)
+(require 'magic)

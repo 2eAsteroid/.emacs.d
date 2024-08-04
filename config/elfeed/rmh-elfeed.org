@@ -1,4 +1,167 @@
-* Web Cartoons
-** [[https://xkcd.com/atom.xml][XKCD]] :funny:science:
-* Blogs :elfeed:
-** [[https://kindness.city/blog/rss.xml][Kindness City]] :philosophy:emacs:
+* Web Cartoons :elfeed:cartoons:
+** [[https://xkcd.com/atom.xml][XKCD]] :humor:
+* Blogs :elfeed:blog:
+** [[https://www.kindness.city/blog/rss.xml][Kindness City]] :philosophy:
+** [[https://k-writer.com/blog/index.xml][Minsuk Kang]] :writing:
+** [[https://carolinemao.com/feed.xml][Caroline Mao]] :writing:
+** [[https://animistsramblings.substack.com/feed][Animist's Ramblinds]] :anprim:
+** [[https://l-lang.org/blog/rss.xml][L Language]]
+* Interesting :elfeed:
+** [[https://cosmic.voyage/rss.xml][Cosmic Voyage]] :story:
+** [[https://www.lrb.co.uk/blog/feed][London Review of Books]] :review:
+** [[http://100r.co/links/rss.xml][100 Rabbits]] :blog:art:
+* Reddit :elfeed:reddit:
+** [[https://www.reddit.com/r/emacs/.xml][r/emacs]]                  :emacs:
+** [[https://www.reddit.com/r/anarchoprimitivism/.xml][r/anarchoprimitivism]] :anprim:
+** [[https://www.reddit.com/r/Piracy/.xml][r/Piracy]] :piracy:
+** [[https://www.reddit.com/r/bodyweightfitness/.xml][r/bodyweightfitness]] :fitness:
+** [[https://www.reddit.com/r/NixOS/.xml][r/NixOS]] :nix:
+** [[reddit.com/r/discordian/.xml][r/discordian]] :humor:religion:
+** [[https://www.reddit.com/r/mathrock/.xml][r/mathrock]] :mathrock:
+** [[https://www.reddit.com/r/anarcho_primitivism/.xml][r/anarcho_primitivism]] :anprim:
+** [[https://www.reddit.com/r/PrivacyGuides/.xml][r/PrivacyGuides]] :privacy:
+** [[https://www.reddit.com/r/Animism/.xml][r/Animism]] :animism:religion:
+** [[https://www.reddit.com/r/freesoftware/.xml][r/freesoftware]] :freedom:tech:
+** [[https://www.reddit.com/r/Ishmael/.xml][r/Ishmael]] :anprim:
+** [[https://www.reddit.com/r/trumpet/.xml][r/trumpet]] :trumpet:
+** [[https://www.reddit.com/r/Vaporwave/.xml][r/Vaporwave]] :electronic:
+** [[https://www.reddit.com/r/Nujabes/.xml][r/Nujabes]] :electronic:soul:
+** [[https://www.reddit.com/r/Tuba/.xml][r/Tuba]]                     :tuba:
+* Youtube Channels :elfeed:youtube:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCxJS29fVKOSnHzBjbmhf1Pg][10,000 Hours]] :art:neuro:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCpXwVYWHCWuaD6xWyQo2zZQ][Akiba's Treat]] :music:mathrock:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCCgK6peZI5-FKDCWzMIFk2A][Almost Friday TV]] :skit:humor:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCW_XEF0vptbFHD4qrIvJTuw][American Football]] :music:midwestemo:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCrwOzu7ienZYuzAdeeRL4rQ][Andrew Giraffe]] :tech:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCXq91jOEwnyOZMjL0ssXGLA][Annie Booth Sextet]] :music:jazz:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCyfVmh0_CxWFkaGVAFF43DA][Antonin Dvorak]] :music:classical:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UC3J-txytRWiRtNXrLS95eEw][ASIAN KUNG-FU GENERATION]] :music:jrock:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCPV42MqVj5VFVoMlcY_21uQ][At the Drive In]] :music:hc:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UC9UKPs9ZisfhMJdalnETLRg][AZALI]] :music:amateur:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCBvhA9nnI8iVwufea4qZk_w][Big Rat Hole]] :review:humor:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UC5EEcOixvGwVFVsHXWYehHg][Brad Harrison]] :musictheory:trumpet:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UC8wKWWarusivFpIcUx9ilOw][By Default]] :review:tech:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCrP_Wk_VWEzbp-I1ATjuP0w][By the End of Tonight and Tera Melos]] :music:mathrock:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCZgt6AzoyjslHTC9dz0UoTw][ByteByteGo]] :learning:cs:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCnlAv4aJxoBKH7MyAoYqAcQ][Catch 22]] :music:ska:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCXSaOCck3oVxhB4W_4Ca3MQ][Charles Mingus]] :music:jazz:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCiLq_AE4ThU4ZDqjOO2KFcg][Chet Baker]] :music:jazz:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCQQnUnfZKlmW1w41_Lgeb6Q][Chypho]] :music:electronic:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCtVykkawMSw1Bp49tHlBs3A][Clown Core]] :music:jazz:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCb4Zcf9-scLoQorP99b2I5A][Coaltar of the Deepers]] :music:shoegaze:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCb4E2yz1EJXMUc21aeH6U2A][Colossal]] :music:mathrock:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCNXd2rjFne7lIJrsrnkpH3A][Cornelius]] :music:electronic:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCEtONSxjR7NSOMdrEfjF-eA][Covet]] :music:mathrock:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCMqXCTXulFWHrmd2588IqJw][crow]] :learning:cybersec:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCsrxrOtjmWnH5FJhJnkTRBg][cubicmetre]] :project:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCQDsiRE--IQe5ycCLeetIxQ][Deftones]] :music:metal:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UC7vr45_FYgu0qiVkTRZE64g][Drums and Tuba]] :music:mathrock:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCAlcD16ERPDpRx1XpXMxy9A][Dumb Waiter]] :music:mathrock:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCztiH7D-fHwsMyUF8r15vsQ][Earth Wind & Fire]] :music:funk:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCU85cqdRQh8HBpk94vbcS_g][ELECTRONICOS FANTASICOS!]] :music:amateur:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UC6h5omoSTQI08zMnim4lMpA][Emerson, Lake and Palmer]] :music:prog:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCimiUgDLbi6P17BdaCZpVbg][exurb1a]] :philosophy:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCjvllCQQ0ZuaVCn0UWbTbgA][Fats Navarro]] :music:jazz:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UC7xvvw65sBv6VkZwua70lgA][Fishmans]] :music:electronic:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCi2KNss4Yx73NG0JARSFe0A][Foo Fighters]] :music:rock:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UC2cjwtJB5rzpMetjDlnjGHg][Fugazi]] :music:hc:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCwi36Vo8fEbwCt8aBQtlChg][Garret Savluk]] :music:jazz:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCkel1hn6h7FEtlCQnfcLctg][Ginger Root]] :music:citypop:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCJ17zOieJYpGYqXIyG1XpEg][GLIM SPANKY]] :music:jrock:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCsVZeladiSTL94kgcKTwOJg][Greg Guevara]] :ideas:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCDHxJkXzIkIcdXNDl4JDW8g][HIDARI]] :movie:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCVHICXXtKG7rZgtC5xonNdQ][Howard Abrams]] :emacs:tech:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UC2H7Z2xA4o_gq9R10svXYfw][Humming Urban Stereo]] :music:electronic:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCsG1A3SF0ViI1IhPpLeSlvw][Hyakkei]] :music:mathrock:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCmfF7JZv26UUKyRedViGIlw][HOR BERLIN]] :stream:electronic:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCFzUEe9XUlkDLp6AmtNzmOA][Iogamaster]] :nix:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCG8R0ZMHBkRzBT1DWK9wT5w][Joey Bada$$]] :music:rap:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCcwKqGt0kmLUtgGSHDM14GQ][John Phillip Sousa]] :music:classical:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCGVHC4L6gjS13AMe-JMOjHg][Kane B]] :philosophy:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCbh_g91w0T6OYp40xFrtnhA][karthink]] :emacs:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCkzgRQgC0z-iy7qnxMyXa9A][Katsuo Ohno]] :music:electronic:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UC3lBXcrKFnFAFkfVk5WuKcQ][Kendrick Lamar]] :music:rap:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCBxEf1UWDjbIEoh2MAQR7zQ][King Crimson]] :music:prog:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCI4yUniaiLx3kjntRN2XW-w][Kneebody]] :music:jazz:mathrock:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCcRXI0WgnCtiZzO93t-10Kg][Kyotaro & Rikuo]] :music:rock:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UC4YXkw5kGqh8b_LD0fZrznw][Lamp]] :music:dreampop:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCZU9T1ceaOgwfLRq7OKFU4Q][Linkin Park]] :music:emo:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCpfWWFslWSapwL_q16AboSg][Lionel Hampton]] :music:jazz:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UC6P7fA8xlykuJVDZCQ5hRvw][Literate Machine]] :essay:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UC6biysICWOJ-C3P4Tyeggzg][Low Level Learning]] :cybersec:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCL-rn0In79BZW1CSkoOdcrg][Luvboug]] :art:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCXvKMu64h3vDTujYK3PMTBg][Magyar Posse]] :music:mathrock:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCh2rvH6MGKYC-UHjTA1-eIQ][Masayoshi Takanaka]] :music:samba:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UC8HQ1Us0QsSb1i3UW6dJ26g][MASS OF THE FERMENTING DREGS]] :music:shoegaze:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCpiLQLxDa1PBGG6LNowyHZg][Medicine]] :music:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCxO9YksWfTANICZoP0RVjOA][Mega Shinnosuke]] :music:jpop:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCOzZL8Sd8V8yFGWqOHnVqFA][Men I Trust]] :music:electronic:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UC5OrDvL9DscpcAstz7JnQGA][Michael Jackson]] :music:pop:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UC1ZS17c0DlqUjsXZK3K_bgA][Miles Davis]] :music:jazz:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCVh47EKH9VLresRqiYi9txw][Mili]] :music:pop:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCJqIgdx_-6AZgKvMGx4gNRw][Modern Baseball]] :music:midwestemo:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCAyUOEv_r-B14D6nkb8FYtA][Monobody]] :music:mathrock:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCA8Jt9lFX96LcQs5wDDWlUg][NO BUSES BAND]] :music:jrock:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UC7EOXPMBkjlo_-BX_XljfyA][Nobey One]] :liminal:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCO5XcuQe_fLJVI3sZ0LmGCA][Nujabes]] :music:electronic:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UC6FbBG7NOekcj6luUm-MVRw][NUMBER GIRL]] :music:jrock:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCL9fJ3WKTFnJvgbgH-CHbAQ][Oblique Occasions]] :music:barberbeats:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UC5Tt1a8MfaN--TcuFHhEUIw][UHHO UHHO UHHO]] :music:jazz:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UC9dueoPHlAPNumq4Y_4lExg][Otoboke Beaver]] :music:hc:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCcbca_MnFMLrBXGYiRh1aNQ][Panchiko]] :music:experimental:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCi8C7TNs2ohrc6hnRQ5Sn2w][Programmers are also human]] :humor:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCP08Gm2pbUFdd2AfhYuyt-w][Psychool]] :essay:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCxU03kZb4q_UOfsYOCRvV-Q][Really From]] :music:mathrock:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCEuOwB9vSL1oPKGNdONB4ig][Read Hot Chili Peppers]] :music:rock:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCEqMHZ4UDL5MIl0gtzhDxjA][RYUSENKEI]] :music:soul:citypop:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCNLRcEn78Vc62C3GkMvBgtA][saveitforparts]] :hard:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCd7HjSpY5Vgpcwhrw1cHxSg][Seru Giran]] :music:rock:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UC3DxTwjy9jNGbHXjQQw8_ew][Shahjahon A.A. Saidmurodov]] :humor:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCVw8R983zHpdVQGmAocVhuA][Shaolin Afronauts]] :music:afrobeat:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCh-prKAFKJIvf4LVC-khKNA][Shoes in the Dryer]] :review:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCOxkak25bS67-EIGCd89BLw][Sondre Berg]] :fitness:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCML7DcvQrG9sUw5kGqAGtaA][Soundproof Guide]] :hard:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCOwqsnaH5sjvLZrCRq8hAUA][Streetlight Manifesto]] :music:ska:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCxpO-f-ODJ5sWcd2WucMaKw][STRIQfit]] :fitness:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCacINNF-idChrqP-5I45m3A][Student Slasher Film]] :music:mathrock:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCLV4vQNd69I7MrgjZKIV0Cw][Studless]] :humor:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UC3azLjQuz9s5qk76KEXaTvA][suckerpinch]] :cs:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCuWDZxokHG_A7NaWrDhyw8A][Sunny Day Real Estate]] :music:midwestemo:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCAiiOTio8Yu69c3XnR7nQBQ][System Crafters]] :emacs:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCITn9pm8w4HqxHfqZJmce4Q][Tao Physique]] :fitness:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCxUheFf_jVsSkxW9DBd_6bA][The 8-Bit Big Band]] :music:bigband:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UC4uy-kglerH1PdHGKRU0jFw][the band apart]] :music:jrock:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UC2Ns1Jsrn_X9PA3GStYctVw][The Cat Empire]] :music:international:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCQ5hD-fpksO0-7xLoBq3lTw][The Coup]] :music:rap:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCMHRMtQ1I0PyACkZj6BPSSQ][The Math Rock Collective]] :music:mathrock:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCIZGqIYkST36dLp0uf9o9nw][The Notorious B.I.G.]] :music:rap:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCfAOh2t5DpxVrgS9NQKjC7A][The Onion]] :humor:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCJFJuYpd7mMeC9mZVdTqV1g][the pillows]] :music:jrock:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCaITlLPxQ-34U2Dc5BTb4LA][The Stone Circle]] :fitness:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCzgEZqfIkX4fEwo9OhhfWyA][This Town Needs Guns]] :music:mathrock:midwestemo:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCx9g89VoBnuNJV7ha-A69Gg][tide/edit]] :music:mathrock:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UC2JflbloChwWIDaZFD8wzew][toconoma]] :music:electronic:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCWGlYBYNAJPKQJrG1pobxDw][toe]] :music:mathrock:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCA0lW_G34h8TtpcsXu5ns6g][Totorro]] :music:mathrock:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UC8Xp4bKmRn8cmAzi0cc66KQ][tricot]] :music:mathrock:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCLkTF30pU2c32zxHqPKYQLg][Triple-Q]] :music:humor:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCP5O_Y-RbtVJUEv4uLP-O8A][Turnstile]] :music:hc:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCDEtZ7AKmwS0_GNJog01D2g][Uncle Dave]] :emacs:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCaFoZFhV1LgbFIB3-6zdWVg][VITAS]] :music:pop:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCfljcJoOuPcFsQuSdsnfN8A][Veltpunch]] :music:jrock:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCxHTM1FYxeC4F7xDsBVltGg][Wim Hof]] :fitness:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCxbViCBWaW2RLZLGcOdsxAw][Worldhaspostrock]] :music:rock:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UC5wtK4MoeJ79ZgoU5wtDgsw][You Slut!]] :music:mathrock:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCcBajV3xbTwTbZJAEX4q9aw][Vokrug fonarnogo stolba]] :music:midwestemo:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCjtV4gKeJepQKqTXRFLkAeA][Yura Yura Teikoku]] :music:psychrock:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCB2tP2QfRG7hTra0KTOtTBg][Tuyu]] :music:jrock:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCLcDCIWMBruo5VASmmlv7Uw][Miracle Musical]] :music:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UC00An10DnP3ET4WaHN__4Kw][rubens]] :music:jrock:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCoZIgsoazsnyfKrGWBsMJ4g][Kyoto Low Brass Quartet]] :music:classical:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCyCarLRHBVJYXJ3L2uuEEQg][Elephant Gym]] :music:mathrock:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCgvSMpcgQgZ0SbaJ2Owul6g][kanadetesourou]] :music:folk:rock:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCa_jrOB_k316Xkc5vKIgSLg][Cocaine Lore]] :music:ambient:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCWGl1JQoX90LM8hRuRbdFDA][GOKUMON (UchikubiGokumonDoukoukai)]] :music:hc:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UC2JzylaIF8qeowc7-5VwwmA][Minami]] :music:jpop:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCXBcSkBS763VgEmoKYUxfMg][EggPlantEgg]] :music:crock:
+** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCVKo17cwuy7L9scbNTRc4dQ][kyojaku]] :music:mathrock:

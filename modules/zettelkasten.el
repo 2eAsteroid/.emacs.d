@@ -45,7 +45,7 @@
     (error "")))
 
 (setq org-roam-node-display-template
-      (concat "${type:15} ${hierarchy}${title:*} " (propertize "${tags:10}" 'face 'org-tag)))
+      (concat "${type:15} ${hierarchy}${title:*}${spacing}" (propertize "${tags:10}" 'face 'org-tag)))
 
 (defun tag-new-node-as-draft ()
   (org-roam-tag-add '("draft")))
@@ -100,7 +100,7 @@
 (straight-use-package
  '(dendroam :type git
             :host github
-            :repo "vicrdguez/dendroam"
+            :repo "2eAsteroid/dendroam"
             :files (:defaults)))
 
 (require 'dendroam)
